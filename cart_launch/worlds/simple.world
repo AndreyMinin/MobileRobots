@@ -1,0 +1,221 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="default">
+    <include>
+      <uri>model://ground_plane</uri>
+      <size>200 200</size>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+   <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose frame=''>147.417 -99.5481 97.5929 -0 0.559643 2.36819</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+    <include>
+	<uri>model://construction_barrel</uri>
+	<name>b1</name>
+	<pose>0.0 -5.0 0 0 0 0</pose>
+    </include>
+   <include>
+	<uri>model://construction_barrel</uri>
+	<name>b2</name>
+	<pose>0 5.0 0 0 0 0</pose>
+    </include>
+    <include>
+	<uri>model://construction_barrel</uri>
+	<name>b3</name>
+	<pose>10 15.0 0 0 0 0</pose>
+    </include>
+    <include>
+	<uri>model://house_1</uri>
+	<name>h1_1</name>
+	<pose>40 25.0 0 0 0 0</pose>
+    </include>
+    <include>
+	<uri>model://house_1</uri>
+	<name>h1_2</name>
+	<pose>40 35.0 0 0 0 0</pose>
+    </include>
+    <include>
+	<uri>model://house_2</uri>
+	<name>h2_1</name>
+	<pose>0 30.0 0 0 0 1.57</pose>
+    </include>
+
+   <include>
+	<uri>model://house_3</uri>
+	<name>h3_1</name>
+	<pose>-40 50.0 0 0 0 1.57</pose>
+    </include>
+
+  <include>
+	<uri>model://house_3</uri>
+	<name>h3_2</name>
+	<pose>-40 70.0 0 0 0 1.57</pose>
+    </include>
+
+  <include>
+	<uri>model://lamp_post</uri>
+	<name>l1</name>
+	<pose>-35 90.0 0 0 0 1.57</pose>
+    </include>
+  <include>
+	<uri>model://lamp_post</uri>
+	<name>l2</name>
+	<pose>-35 100.0 0 0 0 1.57</pose>
+    </include>
+
+  <include>
+	<uri>model://lamp_post</uri>
+	<name>l3</name>
+	<pose>-27 110.0 0 0 0 1.57</pose>
+    </include>
+
+    <include>
+	<uri>model://speed_limit_sign</uri>
+	<name>s1</name>
+	<pose>20 50.0 0 0 0 0</pose>
+    </include>
+
+    <include>
+	<uri>model://wooden_board</uri>
+	<name>b1_0</name>
+	<pose>25 25.0 0 0 0 1.57</pose>
+    </include>
+
+    <include>
+	<uri>model://wooden_board</uri>
+	<name>b1_1</name>
+	<pose>25 26.0 0 0 0 0</pose>
+    </include>
+
+     <include>
+	<uri>model://wooden_board</uri>
+	<name>wb2</name>
+	<pose>28 30.0 0 0 0 1.57</pose>
+    </include>
+
+     <include>
+	<uri>model://wooden_peg_board</uri>
+	<name>wb3</name>
+	<pose>29 32.0 0 0 0 1.57</pose>
+    </include>
+     
+    <include>
+	<uri>model://brick_box_3x1x3</uri>
+	<name>w1</name>
+	<pose>23 50.0 0 0 0 1.57</pose>
+    </include>
+
+    <include>
+	<uri>model://grey_wall</uri>
+	<name>w2</name>
+	<pose>23 56.0 0 0 0 1.57</pose>
+    </include>
+
+    <include>
+	<uri>model://brick_box_3x1x3</uri>
+	<name>w3</name>
+	<pose>23 64.0 0 0 0 1.57</pose>
+    </include>
+
+   <include>
+	<uri>model://brick_box_3x1x3</uri>
+	<name>w4</name>
+	<pose>28 55.0 0 0 0 1.57</pose>
+    </include>
+
+    <include>
+	<uri>model://grey_wall</uri>
+	<name>w5</name>
+	<pose>28 62.0 0 0 0 1.57</pose>
+    </include>
+
+    <include>
+	<uri>model://brick_box_3x1x3</uri>
+	<name>w6</name>
+	<pose>28 70.0 0 0 0 1.57</pose>
+    </include>
+
+
+    <include>
+	<uri>model://brick_box_3x1x3</uri>
+	<name>w7</name>
+	<pose>-22 35.0 0 0 0 1.57</pose>
+    </include>
+
+    <include>
+	<uri>model://grey_wall</uri>
+	<name>w8</name>
+	<pose>-21 25.0 0 0 0 1.57</pose>
+    </include>
+
+    <include>
+	<uri>model://brick_box_3x1x3</uri>
+	<name>w9</name>
+	<pose>-22 20.0 0 0 0 1.57</pose>
+    </include>
+
+   <include>
+	<uri>model://brick_box_3x1x3</uri>
+	<name>w10</name>
+	<pose>-30 29.0 0 0 0 1.57</pose>
+    </include>
+
+    <include>
+	<uri>model://grey_wall</uri>
+	<name>w11</name>
+	<pose>-30 25.0 0 0 0 1.57</pose>
+    </include>
+
+    <include>
+	<uri>model://brick_box_3x1x3</uri>
+	<name>w12</name>
+	<pose>-30 15.0 0 0 0 1.57</pose>
+    </include>
+   
+    <include>
+	<uri>model://construction_cone</uri>
+	<name>c1</name>
+	<pose>30 70 0 0 0 0</pose>
+    </include>
+   <include>
+	<uri>model://construction_cone</uri>
+	<name>c2</name>
+	<pose>30 80 0 0 0 0</pose>
+    </include>
+   <include>
+	<uri>model://construction_cone</uri>
+	<name>c3</name>
+	<pose>25 80 0 0 0 0</pose>
+    </include>
+
+    <include>
+	<uri>model://construction_cone</uri>
+	<name>c4</name>
+	<pose>0 85 0 0 0 0</pose>
+    </include>
+    <include>
+	<uri>model://construction_cone</uri>
+	<name>c5</name>
+	<pose>-10 80 0 0 0 0</pose>
+    </include>
+
+   <include>
+	<uri>model://car_wheel</uri>
+	<name>cw1</name>
+	<pose>-25 80 0.075668 0 1.57 0</pose>
+    </include>
+
+  <include>
+	<uri>model://car_wheel</uri>
+	<name>cw2</name>
+	<pose>-25 80 0.2325 0 1.57 0</pose>
+    </include>
+  
+  </world>
+</sdf>
