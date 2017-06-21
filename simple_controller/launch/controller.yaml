@@ -1,6 +1,6 @@
 proportional: 1.6
-differential: 2.6
-integral: 0.02
+differential: 4.2
+integral: 0.04
 max_antiwindup_error: 0.3
 radius: 25.0
 cy: 70.0

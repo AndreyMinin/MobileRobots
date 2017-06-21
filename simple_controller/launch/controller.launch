@@ -4,6 +4,10 @@
     <!-- start cart in gazebo world -->
     <include file="$(find cart_launch)/launch/cart.launch">
     </include>
+    <!--  start tf from odo ground truth mesages for cart -->
+    <node name="odo2tf" pkg="odo2tf" type="odo2tf" output="screen">
+    	<remap from="odo" to="/robot/base_pose_ground_truth" />
+    </node>
     <!-- start simple controller -->
     <node name="controller" pkg="simple_controller" type="controller_node" output="screen">
     	<rosparam command="load" file="$(find simple_controller)/launch/controller.yaml" ns="simple_controller" />
@@ -18,6 +22,10 @@
     <node name="rqt" pkg="simple_controller" type="start_rqt" args="--perspective-file $(find simple_controller)/cfg/steer_error.perspective" output="screen">
     </node>
     <!-- start gzclient via script -->
-       <node name="gzclient" pkg="simple_controller" type="start_gzclient" output="screen">
+    <node name="gzclient" pkg="simple_controller" type="start_gzclient" output="screen">
+    </node>
+
+    <!-- start rviz visualisation -->
+    <node name="visualizer" pkg="rviz" type="rviz" args="-d $(find simple_controller)/rviz/traj.rviz">
     </node>
 </launch>

@@ -38,6 +38,8 @@ protected:
   double robot_x = 0.0;
   double robot_y = 0.0;
   double robot_theta = 0.0;
+  //time of robot coordinates update
+  ros::Time robot_time;
   double p_factor;
   double d_factor;
   double i_factor;
@@ -52,7 +54,8 @@ protected:
 
   double max_curvature;
 
-  double current_velocity = 0.0;
+  double current_linear_velocity = 0.0;
+  double current_angular_velocity = 0.0;
   //discrete of publish trajectory
   double traj_dl;
   //length of published trajectory
@@ -73,6 +76,8 @@ protected:
   ros::Publisher err_pub;
   ros::Publisher steer_pub;
   ros::Publisher traj_pub;
+  /// \ frame_id for coordinates of controller
+  std::string world_frame_id;
 
   void on_timer(const ros::TimerEvent& event);
   void on_pose(const nav_msgs::OdometryConstPtr& odom);
@@ -85,12 +90,15 @@ protected:
   /// \ returns iterator to segment and current length  of trajectory belonging to current position
   void get_segment(std::list<TrajPtr>::iterator& traj_it, double& len);
 
+  /// \ update robot pose to current time based on last pose and velocities
+  void update_robot_pose(double dt);
   /*
-   * \brief publishes trajectory as pointcloud
+   * \brief publishes trajectory as pointcloud message
    */
   void publish_trajectory();
   void on_odo(const nav_msgs::OdometryConstPtr& odom);
   void update_trajectory_segment();
+  void publish_error(double error);
 
 public:
   double get_p_factor(){ return p_factor; }

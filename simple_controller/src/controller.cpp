@@ -45,9 +45,20 @@ void Controller::update_trajectory_segment()
 //  ROS_DEBUG_STREAM("current segment length "<<current_segment_length);
 }
 
+void Controller::update_robot_pose(double dt)
+{
+  ROS_DEBUG_STREAM("update_robot_pose "<<dt<<" v = "<<current_linear_velocity );
+  robot_x += current_linear_velocity * dt * sin(robot_theta);
+  robot_y += current_linear_velocity * dt * cos(robot_theta);
+  robot_theta = angles::normalize_angle(robot_theta + current_angular_velocity * dt);
+}
+
+
+
 void Controller::on_timer(const ros::TimerEvent& event)
 {
 
+  update_robot_pose((ros::Time::now() - robot_time).toSec() );
   update_trajectory_segment();
 
 //  double error = cross_track_error();
@@ -60,37 +71,54 @@ void Controller::on_timer(const ros::TimerEvent& event)
   else
     error_integral = 0.0;
 
+  //Necessary angular velocity
   double angular_cmd = p_factor * error +
                         d_factor * diff_err +
                         i_factor * error_integral;
-  double curvature = angular_cmd / current_velocity;
+  //curvature for calculated angular velocity and for current linear velocity
+  double curvature = angular_cmd / current_linear_velocity;
+
+  //send curvature as command to drives
   std_msgs::Float32 cmd;
   cmd.data = clip<double>(curvature, max_curvature);
   steer_pub.publish(cmd);
 
-
+  //send trajectory for velocity controller
   publish_trajectory();
+
+  //send error for debug proposes
+  publish_error(error);
 //  ROS_DEBUG_STREAM("angular_rate cmd = "<<angular_rate);
 }
 
 void Controller::on_pose(const nav_msgs::OdometryConstPtr& odom)
 {
-
   robot_x = odom->pose.pose.position.x;
   robot_y = odom->pose.pose.position.y;
   robot_theta = 2*atan2(odom->pose.pose.orientation.z,
                         odom->pose.pose.orientation.w);
 
+  world_frame_id = odom->header.frame_id;
+  robot_time = odom->header.stamp;
+
 //  current_velocity = odom->twist.twist.linear.x;
 //  ROS_DEBUG_STREAM("x = "<<robot_x<<" "<<" y = "<<robot_y<<" "<<robot_theta);
 
-  //ROS_DEBUG_STREAM("truth vel = "<<odom->twist.twist.linear.x);
+  ROS_DEBUG_STREAM("truth vel = "<<odom->twist.twist.linear.x);
 }
 
 void Controller::on_odo(const nav_msgs::OdometryConstPtr& odom)
 {
-  current_velocity = odom->twist.twist.linear.x;
+  current_linear_velocity = odom->twist.twist.linear.x;
+  current_angular_velocity = odom->twist.twist.angular.z;
   //ROS_DEBUG_STREAM("odom vel = "<<current_velocity);
+}
+
+void Controller::publish_error(double error)
+{
+  std_msgs::Float32 err_msg;
+  err_msg.data = error;
+  err_pub.publish(err_msg);
 }
 
 double Controller::cross_track_error()
@@ -116,11 +144,6 @@ double Controller::cross_track_error()
   {
     error = -radius - robot_x;
   }
-
-  std_msgs::Float32 err_msg;
-  err_msg.data = error;
-  err_pub.publish(err_msg);
-
   return error;
 }
 
@@ -151,8 +174,8 @@ void Controller::publish_trajectory()
 {
   //prepare pointcloud message
   sensor_msgs::PointCloud msg;
-  msg.header.frame_id = "odom";
-  msg.header.stamp = ros::Time::now();
+  msg.header.frame_id = world_frame_id;
+  msg.header.stamp = robot_time;
   static int seq(0);
   msg.header.seq = seq++;
 
@@ -187,7 +210,7 @@ void Controller::publish_trajectory()
     }
 
   }
-
+  ROS_DEBUG_STREAM("publish trajectory");
   traj_pub.publish(msg);
 }
 
