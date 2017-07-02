@@ -1,0 +1,8 @@
+<launch>
+
+<node name="laser_map" pkg="laser2d_map" type="laser2d_map_node" output="screen">
+	<rosparam command="load" file="$(find laser2d_map)/launch/laser_map.yaml"/>
+	<remap from="laser_scan" to="/robot/laser/scan"/>
+</node>
+
+</launch>
