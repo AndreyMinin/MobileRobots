@@ -32,6 +32,7 @@ void Controller::update_trajectory_segment()
   {
     if (current_segment == trajectory.begin())
       current_segment = trajectory.end();
+
     --current_segment;
     current_segment_length = (*current_segment)->get_point_length(robot_x, robot_y);
   }
@@ -47,7 +48,7 @@ void Controller::update_trajectory_segment()
 
 void Controller::update_robot_pose(double dt)
 {
-  ROS_DEBUG_STREAM("update_robot_pose "<<dt<<" v = "<<current_linear_velocity );
+//  ROS_DEBUG_STREAM("update_robot_pose "<<dt<<" v = "<<current_linear_velocity );
   robot_x += current_linear_velocity * dt * sin(robot_theta);
   robot_y += current_linear_velocity * dt * cos(robot_theta);
   robot_theta = angles::normalize_angle(robot_theta + current_angular_velocity * dt);
@@ -57,7 +58,6 @@ void Controller::update_robot_pose(double dt)
 
 void Controller::on_timer(const ros::TimerEvent& event)
 {
-
   update_robot_pose((ros::Time::now() - robot_time).toSec() );
   update_trajectory_segment();
 
@@ -71,10 +71,14 @@ void Controller::on_timer(const ros::TimerEvent& event)
   else
     error_integral = 0.0;
 
+  //feed forward from current curvature
+  double feed_forward = (*current_segment)->get_curvature() * current_linear_velocity;
+//  ROS_DEBUG_STREAM("feed forward "<<feed_forward);
   //Necessary angular velocity
-  double angular_cmd = p_factor * error +
-                        d_factor * diff_err +
-                        i_factor * error_integral;
+  double angular_cmd = feed_forward
+                      + p_factor * error
+                      + d_factor * diff_err
+                      + i_factor * error_integral;
   //curvature for calculated angular velocity and for current linear velocity
   double curvature = angular_cmd / current_linear_velocity;
 
@@ -104,7 +108,7 @@ void Controller::on_pose(const nav_msgs::OdometryConstPtr& odom)
 //  current_velocity = odom->twist.twist.linear.x;
 //  ROS_DEBUG_STREAM("x = "<<robot_x<<" "<<" y = "<<robot_y<<" "<<robot_theta);
 
-  ROS_DEBUG_STREAM("truth vel = "<<odom->twist.twist.linear.x);
+//  ROS_DEBUG_STREAM("truth vel = "<<odom->twist.twist.linear.x);
 }
 
 void Controller::on_odo(const nav_msgs::OdometryConstPtr& odom)
@@ -205,12 +209,12 @@ void Controller::publish_trajectory()
       start_segment_length += (segment_points_quantity + 1)* traj_dl - segment_length;
       //ROS_DEBUG_STREAM("start segment length = "<<start_segment_length);
       ++it;
-      if ( it == trajectory.end())
+      if ( it == trajectory.end() )
         it = trajectory.begin();
     }
 
   }
-  ROS_DEBUG_STREAM("publish trajectory");
+//  ROS_DEBUG_STREAM("publish trajectory");
   traj_pub.publish(msg);
 }
 
@@ -263,12 +267,12 @@ Controller::Controller(const std::string& ns):
     traj_pub( nh.advertise<sensor_msgs::PointCloud>("trajectory", 1) )
 {
   //counter clock
-  trajectory.emplace_back( std::make_shared<trajectory::CircularTrajectory>( 1.0 / radius,    0,       0,    1.0,   0,   M_PI/2*radius) );
-  trajectory.emplace_back( std::make_shared<trajectory::LinearTrajectory>  (        radius, radius, 0.0,   1.0,  cy - radius) );
-  trajectory.emplace_back( std::make_shared<trajectory::CircularTrajectory>( 1.0 / radius,   radius,   cy,   0.0,   1.0, M_PI/2*radius ) );
-  trajectory.emplace_back( std::make_shared<trajectory::CircularTrajectory>( 1.0 / radius,   0, radius + cy,   -1.0, 0.0, M_PI/2*radius ) );
-  trajectory.emplace_back( std::make_shared<trajectory::LinearTrajectory>  (         -radius, cy,   0.0,   -1.0, cy - radius) );
-  trajectory.emplace_back( std::make_shared<trajectory::CircularTrajectory>( 1.0/ radius,   -radius, radius, 0.0,  -1.0,  M_PI/2*radius) );
+  trajectory.emplace_back( std::make_shared<trajectory::CircularSegment>( 1.0 / radius,    0,       0,    1.0,   0,   M_PI/2*radius) );
+  trajectory.emplace_back( std::make_shared<trajectory::LinearSegment>  (        radius, radius, 0.0,   1.0,  cy - radius) );
+  trajectory.emplace_back( std::make_shared<trajectory::CircularSegment>( 1.0 / radius,   radius,   cy,   0.0,   1.0, M_PI/2*radius ) );
+  trajectory.emplace_back( std::make_shared<trajectory::CircularSegment>( 1.0 / radius,   0, radius + cy,   -1.0, 0.0, M_PI/2*radius ) );
+  trajectory.emplace_back( std::make_shared<trajectory::LinearSegment>  (         -radius, cy,   0.0,   -1.0, cy - radius) );
+  trajectory.emplace_back( std::make_shared<trajectory::CircularSegment>( 1.0/ radius,   -radius, radius, 0.0,  -1.0,  M_PI/2*radius) );
 
   //clock wise track
 //  trajectory.emplace_back( std::make_shared<trajectory::CircularTrajectory>( -1.0 / radius,    0,       0,    1.0,   0,   M_PI/2*radius) );

@@ -12,13 +12,14 @@
 #include <ros/ros.h>
 #include <nav_msgs/Odometry.h>
 #include <list>
-#include "trajectory.h"
 #include <memory>
+
+#include "trajectory_segment.h"
 
 namespace simple_controller
 {
 
-using TrajPtr = std::shared_ptr<trajectory::Trajectory>;
+using TrajPtr = std::shared_ptr<trajectory::TrajectorySegment>;
 
 /*!
  *\brief robot controller
