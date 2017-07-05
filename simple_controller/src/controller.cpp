@@ -52,6 +52,7 @@ void Controller::update_robot_pose(double dt)
   robot_x += current_linear_velocity * dt * sin(robot_theta);
   robot_y += current_linear_velocity * dt * cos(robot_theta);
   robot_theta = angles::normalize_angle(robot_theta + current_angular_velocity * dt);
+  robot_time += ros::Duration(dt);
 }
 
 
