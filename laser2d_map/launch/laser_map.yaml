@@ -1,8 +1,0 @@
-map_frame: world
-resolution: 0.2
-x_width: 80.0
-y_width: 80.0
-max_latency: 0.2
-miss_scan_number: 1
-miss_ray: 1
-min_range: 2.0

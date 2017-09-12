@@ -29,6 +29,4 @@
     <node name="visualizer" pkg="rviz" type="rviz" args="-d $(find simple_controller)/rviz/traj.rviz">
     </node>
 
-    <!-- start laser map node -->
-    <include file="$(find laser2d_map)/launch/laser_map.xml"/>
 </launch>
