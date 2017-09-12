@@ -10,12 +10,17 @@ add_definitions(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
+  geometry_msgs
   tf
 )
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
-
+find_package(Eigen3 QUIET)
+if(NOT EIGEN3_FOUND)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(EIGEN3 REQUIRED eigen3)
+  set(EIGEN3_INCLUDE_DIR ${EIGEN3_INCLUDE_DIRS})
+endif()
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -103,9 +108,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES velocity_controller
-#  CATKIN_DEPENDS roscpp sensor_msgs tf
+  INCLUDE_DIRS include
+  LIBRARIES point_trajectory
+  CATKIN_DEPENDS geometry_msgs
 #  DEPENDS system_lib
 )
 
@@ -117,13 +122,15 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
+  include
   ${catkin_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIR}
 )
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/velocity_controller.cpp
-# )
+add_library(point_trajectory
+   src/point_trajectory.cpp
+ )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -149,6 +156,7 @@ add_executable(${PROJECT_NAME}_node src/velocity_controller.cpp
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
    ${catkin_LIBRARIES}
+   point_trajectory
     )
 
 #############
@@ -191,10 +199,12 @@ target_link_libraries(${PROJECT_NAME}_node
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_velocity_controller.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
+if(CATKIN_ENABLE_TESTING)
+   catkin_add_gtest(point_trajectory-test test/point_trajectory_test.cpp)
+endif()
 
+if(TARGET point_trajectory-test)
+   target_link_libraries(point_trajectory-test point_trajectory)
+endif()
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

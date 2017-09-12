@@ -1,3 +1,4 @@
+#this file was created for version of curvature controller
 proportional: 0.9
 differential: 1.5
 integral: 0.02

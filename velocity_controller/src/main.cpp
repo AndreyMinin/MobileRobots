@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
 {
   ros::init(argc, argv, "vel_controller");
   ros::NodeHandle nh("~/velocity_controller");
+  velocity_controller::VelocityController VCtl;
   ros::spin();
   return 0;
 

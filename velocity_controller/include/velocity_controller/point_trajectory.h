@@ -35,6 +35,8 @@ protected:
   //prev next - bound indexes
   //length is trunkated to length from prev point
   bool get_bound_indexes(double& length, int& prev, int& next);
+  //calculation by second order
+  double curvature(const point_t& p1, const point_t& p2, const point_t& p3);
   void calculate_curvatures();
 public:
 
@@ -42,6 +44,7 @@ public:
   double get_curvature(double length);
   double get_length() { return this->length; }
   PointTrajectory(std::vector<geometry_msgs::Point32> points);
+  PointTrajectory():length(0){}
   virtual ~PointTrajectory();
 };
 

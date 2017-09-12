@@ -1,0 +1,17 @@
+<launch>
+	<node name="velocty_controller" pkg="velocity_controller" type="velocity_controller_node" output="screen">
+		<remap from="velocity" to="/robot/velocity"/>
+		<remap from="odo" to="/robot/odo"/>
+		<remap from="map" to="/laser_map/laser_map"/>
+		<param name="time_period" value="0.1"/>
+		<param name="max_velocity" value="10.0"/>
+		<param name="max_acc" value="1.0"/>
+		<param name="max_dcc" value="1.0"/>
+		<param name="jerk" value="2.0"/>
+		<param name="chassis_width" value="2.0"/>
+		<param name="chassis_length" value="3.0"/>
+		<param name="max_centripetal_acc" value="3.6"/>
+		<param name="max_angular_acc" value="4.0"/>
+		<param name="long_run_time" value="3.0"/>
+	</node>
+</launch>
