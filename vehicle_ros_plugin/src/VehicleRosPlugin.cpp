@@ -11,6 +11,7 @@
 #include <ros/ros.h>
 #include "VehicleRosPlugin.h"
 #include <functional>
+#include <boost/make_shared.hpp>
 
 const double EPS = 0.00001;
 
@@ -125,7 +126,11 @@ void VehicleRosPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
 
 void VehicleRosPlugin::Reset()
 {
-  last_update_time = parent->GetWorld()->SimTime();
+#if GAZEBO_MAJOR_VERSION <= 7
+  common::Time current_time = parent->GetWorld()->GetSimTime();
+#else
+  common::Time current_time = parent->GetWorld()->SimTime();
+#endif
   pose_encoder.x = 0;
   pose_encoder.y = 0;
   pose_encoder.theta = 0;
@@ -185,7 +190,11 @@ void VehicleRosPlugin::UpdateChild()
     UpdateRearOdometryEncoder();
   else
     UpdateFrontOdometryEncoder();
+#if GAZEBO_MAJOR_VERSION <= 7
+  common::Time current_time = parent->GetWorld()->GetSimTime();
+#else
   common::Time current_time = parent->GetWorld()->SimTime();
+#endif
   double seconds_since_last_udate = (current_time - last_update_time ).Double();
 
   if ( seconds_since_last_udate > update_period )
@@ -357,7 +366,11 @@ void VehicleRosPlugin::publishWheelJointStates()
   for( int i = 0; i< JOINTS_NUMBER; ++i )
   {
     physics::JointPtr& joint = joints[i];
+#if GAZEBO_MAJOR_VERSION <= 7
+    joint_state_msg.position[i] = joint->GetAngle(0).Radian();
+#else
     joint_state_msg.position[i] = joint->Position( 0 );
+#endif
     joint_state_msg.velocity[i] = joint->GetVelocity(0);
     joint_state_msg.name[i] = joint->GetName();
   }
@@ -366,12 +379,19 @@ void VehicleRosPlugin::publishWheelJointStates()
 
 void VehicleRosPlugin::UpdateFrontOdometryEncoder()
 {
+#if GAZEBO_MAJOR_VERSION <= 7
+  double al = joints[FRONT_LEFT_STEERING] -> GetAngle( 0 ).Radian();
+  double ar = joints[FRONT_RIGHT_STEERING] -> GetAngle( 0 ).Radian();
+  common::Time current_time = parent->GetWorld()->GetSimTime();
+#else
   double al = joints[FRONT_LEFT_STEERING] -> Position( 0 );
   double ar = joints[FRONT_RIGHT_STEERING] -> Position( 0 );
+  common::Time current_time = parent->GetWorld()->SimTime();
+#endif
   double vl = wheel_radius*joints[FRONT_LEFT_WHEEL]->GetVelocity( 0 );
   double vr = wheel_radius*joints[FRONT_RIGHT_WHEEL]->GetVelocity( 0 );
 
-  common::Time current_time = parent->GetWorld()->SimTime();
+
   double seconds_since_last_update = (current_time - last_odom_update).Double();
   last_odom_update = current_time;
 
@@ -387,7 +407,11 @@ void VehicleRosPlugin::UpdateRearOdometryEncoder()
 {
   double vl = joints[REAR_LEFT_WHEEL]->GetVelocity( 0 );
   double vr = joints[REAR_RIGHT_WHEEL]->GetVelocity( 0 );
+#if GAZEBO_MAJOR_VERSION <= 7
+  common::Time current_time = parent->GetWorld()->GetSimTime();
+#else
   common::Time current_time = parent->GetWorld()->SimTime();
+#endif
   double seconds_since_last_update = (current_time - last_odom_update).Double();
   last_odom_update = current_time;
 

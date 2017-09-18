@@ -1,7 +1,6 @@
 /*
  * VehicleRosPlugin.h
  *
- *  Created on: 4 апр. 2017 г.
  *      Author: aminin
  */
 
