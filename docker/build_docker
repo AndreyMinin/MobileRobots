@@ -1,0 +1,1 @@
+docker build -t gazebo_ros_$USER-image gazebo8_with_ros_docker

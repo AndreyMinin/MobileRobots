@@ -1,0 +1,1 @@
+docker stop $USER-gazebo_ros_image
