@@ -1,0 +1,5 @@
+radius: 25.0
+cy: 70.0
+traj_length: 50
+timer_period: 0.1
+max_velocity: 4.0
