@@ -42,5 +42,9 @@ WORKDIR /catkin_ws
 RUN source /opt/ros/kinetic/setup.bash \
 	&& catkin_init_workspace src \
 	&& catkin_make -DCMAKE_INSTALL_PREFIX=/opt/ros/kinetic -DCMAKE_BUILD_TYPE=Release install
+WORKDIR /opt/
+RUN git clone https://github.com/acado/acado.git
+WORKDIR /opt/acado/build
+RUN cmake .. && make -j4 && make install 
 WORKDIR /
 
