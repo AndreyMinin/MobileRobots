@@ -14,8 +14,10 @@
 #include <list>
 #include <memory>
 #include <acado/acado_toolkit.hpp>
+#include <tf/tf.h>
 #include "trajectory_segment.h"
 #include "mpc.h"
+
 
 namespace mpc_controller
 {
@@ -82,6 +84,7 @@ protected:
   ros::Publisher steer_pub;
   ros::Publisher vel_pub;
   ros::Publisher traj_pub;
+  ros::Publisher poly_pub;
   /// \ frame_id for coordinates of controller
   std::string world_frame_id;
 
@@ -114,12 +117,14 @@ protected:
   std::vector<tf::Vector3> control_points;
   double control_points_dl = 2.0;
   std::size_t control_points_num = 4;
-  double mpc_steps = 12;
-  double mpc_dt = 0.1;
+  double mpc_steps ;
+  double mpc_dt;
   // coefs for y = f(x) for control points
   std::vector<double> control_coefs;
 
   MPC mpc;
+
+  tf::Transform robot2world;
 
   void update_control_points();
   // converts control points into robot coordinate frame
@@ -127,6 +132,7 @@ protected:
   void calculate_control_coefs();
   double polyeval(double x);
   void apply_control();
+  void publish_poly();
 public:
   void reset();
   MPCController(const std::string& ns = "mpc_controller");

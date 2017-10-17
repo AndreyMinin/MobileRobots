@@ -16,10 +16,15 @@
     	<remap from="steering" to="/robot/steering"/>
     	<remap from="velocity" to="/robot/velocity"/>
     </node>
+
 	<node name="rqt" pkg="mpc_controller" type="start_rqt" args="--perspective-file $(find mpc_controller)/rqt/steer_error.perspective" output="screen">
     </node>
+
     <!-- start gzclient via script -->
+    <!--
     <node name="gzclient" pkg="simple_controller" type="start_gzclient" output="screen">
     </node>
-
+	-->
+	<node name="rviz" pkg="rviz" type="rviz" args="--display-config $(find mpc_controller)/rviz/traj.rviz">
+	</node>
 </launch>

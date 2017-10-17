@@ -13,7 +13,8 @@ USING_NAMESPACE_ACADO
 namespace mpc_controller
 {
 
-MPC::MPC(int steps, double dt, double max_vel, double max_acc, double max_delta, double max_delta_rate, double L):
+MPC::MPC(int steps, double dt, double max_vel, double max_acc, double max_delta, double max_delta_rate, double L,
+         double kcte, double kepsi, double kv):
     f(dt),
     t_end(steps * dt),
     steps(steps),
@@ -21,7 +22,10 @@ MPC::MPC(int steps, double dt, double max_vel, double max_acc, double max_delta,
     max_acc(max_acc),
     max_delta(max_delta),
     max_delta_rate(max_delta_rate),
-    L(L)
+    L(L),
+    kcte(kcte),
+    kepsi(kepsi),
+    kev(kv)
 {
   // discrete time system
   f << next(x) == x + vel*cos(fi)*dt;
@@ -45,7 +49,7 @@ void MPC::solve(double v0, double delta0, std::vector<double>& traj_coef, double
   ocp.subjectTo( AT_START, fi == 0 );
   ocp.subjectTo( -max_acc <= acc <= max_acc );
   ocp.subjectTo( -max_delta_rate <=delta_rate <= max_delta_rate );
-  ocp.subjectTo( delta <= max_delta );
+  ocp.subjectTo( -max_delta <= delta <= max_delta );
   ocp.subjectTo( AT_START, vel == v0 );
   ocp.subjectTo( AT_START, delta == delta0 );
 
@@ -57,12 +61,15 @@ void MPC::solve(double v0, double delta0, std::vector<double>& traj_coef, double
 
   // minimization objectives
   Expression cte = pow(y - a0 - a1*x - a2*x*x -a3*x*x*x, 2);
-  Expression epsi = pow(fi - atan(a1 + a2*x + a3*x*x), 2);
+  Expression epsi = pow(fi - atan(a1 + 2*a2*x + 3*a3*x*x), 2);
   Expression verr = pow(vel - max_vel, 2);
+//  double emax = std::max(0.25, a0*1.2);
+//  ocp.subjectTo(cte <= emax);
 
-  ocp.minimizeMayerTerm(1000*cte + 1000*epsi + verr);
+  ocp.minimizeMayerTerm(kcte*cte + kepsi*epsi + kev*verr);
 
   OptimizationAlgorithm alg(ocp);
+  alg.set(PRINTLEVEL, LOW);
   ROS_INFO_STREAM("start solving mpc");
   alg.solve();
   ROS_INFO_STREAM("finished solving mpc");

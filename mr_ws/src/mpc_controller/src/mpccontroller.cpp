@@ -68,9 +68,6 @@ void MPCController::update_control_points() {
 }
 
 void MPCController::convert_control_points() {
-  tf::Transform robot2world;
-  robot2world.setOrigin(tf::Vector3(robot_x, robot_y, 0));
-  robot2world.setRotation(tf::createQuaternionFromYaw(robot_theta));
   tf::Transform world2robot = robot2world.inverse();
   ROS_DEBUG_STREAM("control points in robot coordinates ");
   for (auto& point: control_points) {
@@ -121,6 +118,8 @@ void MPCController::update_robot_pose(double dt)
   robot_y += current_linear_velocity * dt * cos(robot_theta);
   robot_theta = angles::normalize_angle(robot_theta + current_angular_velocity * dt);
   robot_time += ros::Duration(dt);
+  robot2world.setOrigin(tf::Vector3(robot_x, robot_y, 0));
+  robot2world.setRotation(tf::createQuaternionFromYaw(robot_theta));
 }
 
 void MPCController::apply_control() {
@@ -152,11 +151,14 @@ void MPCController::on_timer(const ros::TimerEvent& event)
   ROS_DEBUG_STREAM("error from coef[0] = "<<error);
   ros::Time start_solve = ros::Time::now();
   mpc.solve(current_linear_velocity, cmd_steer_angle, control_coefs, cmd_steer_rate, cmd_acc);
-  ROS_DEBUG_STREAM("solve time = "<<(ros::Time::now() - start_solve).toSec());
+  double solve_time = (ros::Time::now() - start_solve).toSec();
+  ROS_DEBUG_STREAM("solve time = "<<solve_time);
+  ROS_ERROR_STREAM_COND(solve_time > 0.08, "Solve time too big "<<solve_time);
   apply_control();
 
   //send trajectory for velocity controller
   publish_trajectory();
+  publish_poly();
 
   //send error for debug proposes
   publish_error(cross_track_error());
@@ -289,7 +291,24 @@ void MPCController::publish_trajectory()
   traj_pub.publish(msg);
 }
 
+void MPCController::publish_poly() {
+  //prepare pointcloud message
+  sensor_msgs::PointCloud msg;
+  msg.header.frame_id = world_frame_id;
+  msg.header.stamp = robot_time;
+  static int seq(0);
+  msg.header.seq = seq++;
+  double xrange = control_points_dl * control_points_num * 1.5;
+  int trajectory_points_quantity = xrange / traj_dl;
+  msg.points.reserve( trajectory_points_quantity );
 
+  for(int i = 0; i<trajectory_points_quantity; ++i) {
+    double x = i*traj_dl;
+    tf::Vector3 point = robot2world(tf::Vector3(x, polyeval(x), 0));
+    add_point(msg, point);
+  }
+  poly_pub.publish(msg);
+}
 /*!
  * \brief constructor
  * loads parameters from ns
@@ -322,7 +341,13 @@ MPCController::MPCController(const std::string& ns):
     vel_pub( nh.advertise<std_msgs::Float32>("/velocity", 1) ),
     odo_sub( nh.subscribe("odom", 1, &MPCController::on_odo, this)),
     traj_pub( nh.advertise<sensor_msgs::PointCloud>("trajectory", 1) ),
-    mpc(mpc_steps, mpc_dt, max_velocity, max_acc, max_steer_angle, max_steer_rate, wheel_base)
+    poly_pub( nh.advertise<sensor_msgs::PointCloud>("poly", 1) ),
+    mpc_steps( nh.param("mpc_steps", 4) ),
+    mpc_dt( nh.param("mpc_dt", 0.5) ),
+    mpc(mpc_steps, mpc_dt, max_velocity, max_acc, max_steer_angle, max_steer_rate, wheel_base,
+        nh.param("kcte", 1.0),
+        nh.param("kepsi", 1.0),
+        nh.param("kev", 1.0))
 {
   //counter clock
   trajectory.emplace_back( std::make_shared<trajectory::CircularSegment>( 1.0 / radius,    0,       0,    1.0,   0,   M_PI/2*radius) );

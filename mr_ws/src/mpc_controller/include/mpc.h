@@ -26,9 +26,13 @@ class MPC
   double max_delta;
   double max_delta_rate;
   double L;
+  double kcte;
+  double kepsi;
+  double kev;
 public:
   void solve(double v0, double delta0, std::vector<double>& traj_coef, double& rate_u, double& acc_u);
-  MPC(int steps, double dt, double max_vel, double max_acc, double max_delta, double max_delta_rate, double L);
+  MPC(int steps, double dt, double max_vel, double max_acc, double max_delta, double max_delta_rate, double L,
+      double kcte = 1.0, double kepsi = 1.0, double kev = 1.0);
   virtual ~MPC();
 };
 

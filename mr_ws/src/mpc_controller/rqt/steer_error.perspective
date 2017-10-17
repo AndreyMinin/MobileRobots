@@ -188,7 +188,7 @@
                 }, 
                 "x_limits": {
                   "type": "repr", 
-                  "repr": "[74.480733963736, 109.109]"
+                  "repr": "[0.5377339637360095, 35.166000000000004]"
                 }
               }, 
               "groups": {}
@@ -231,11 +231,11 @@
                 }, 
                 "y_limits": {
                   "type": "repr", 
-                  "repr": "[-1.0409622192382812, 32.155662536621094]"
+                  "repr": "[-0.7224012605726253, 1.4511735115504383]"
                 }, 
                 "x_limits": {
                   "type": "repr", 
-                  "repr": "[56.45813709473043, 109.24900000000001]"
+                  "repr": "[24.070098278497483, 35.451]"
                 }
               }, 
               "groups": {}
@@ -282,7 +282,7 @@
                 }, 
                 "x_limits": {
                   "type": "repr", 
-                  "repr": "[93.49828741634624, 100.83]"
+                  "repr": "[28.593287416346243, 35.925]"
                 }
               }, 
               "groups": {}
@@ -313,7 +313,7 @@
               "keys": {
                 "publishers": {
                   "type": "repr", 
-                  "repr": "u\"[{'type_name': 'std_msgs/Float32', 'topic_name': '/robot/velocity', 'enabled': False, 'rate': 1.0, 'expressions': {u'/robot/velocity/data': '6'}, 'publisher_id': 0, 'counter': 0}, {'type_name': 'std_msgs/Float32', 'topic_name': '/robot/steering', 'enabled': False, 'rate': 1.0, 'expressions': {u'/robot/steering/data': '3'}, 'publisher_id': 1, 'counter': 0}]\""
+                  "repr": "u\"[{'topic_name': '/robot/velocity', 'type_name': 'std_msgs/Float32', 'enabled': False, 'rate': 1.0, 'expressions': {u'/robot/velocity/data': '6'}, 'publisher_id': 0, 'counter': 0}, {'topic_name': '/robot/steering', 'type_name': 'std_msgs/Float32', 'enabled': False, 'rate': 1.0, 'expressions': {u'/robot/steering/data': '3'}, 'publisher_id': 1, 'counter': 0}]\""
                 }
               }, 
               "groups": {}
@@ -327,7 +327,7 @@
               "keys": {
                 "tree_widget_header_state": {
                   "type": "repr(QByteArray.hex)", 
-                  "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff00000000000000010000000000000000010000000000000000000000000000000000000300000000050101000100000000000000000500000064ffffffff0000008100000003000000050000011e0000000100000003000000f300000001000000030000006100000001000000030000002a0000000100000003000000640000000100000003000003e800')", 
+                  "repr(QByteArray.hex)": "QtCore.QByteArray('000000ff00000000000000010000000000000000010000000000000000000000000000000000000328000000050101000100000000000000000500000064ffffffff0000008100000003000000050000011e00000001000000030000011b00000001000000030000006100000001000000030000002a0000000100000003000000640000000100000003000003e800')", 
                   "pretty-print": "                              d                     a     *     d      "
                 }
               }, 
