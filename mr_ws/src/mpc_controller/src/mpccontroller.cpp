@@ -139,8 +139,10 @@ void MPCController::apply_control() {
 
 void MPCController::on_timer(const ros::TimerEvent& event)
 {
-//  ROS_INFO_STREAM("on_timer");
-  update_robot_pose((ros::Time::now() - robot_time).toSec() );
+  apply_control();
+
+  //  ROS_INFO_STREAM("on_timer");
+  update_robot_pose((ros::Time::now() - robot_time).toSec() + control_dt );
   update_trajectory_segment();
 
   update_control_points();
@@ -149,20 +151,18 @@ void MPCController::on_timer(const ros::TimerEvent& event)
 
   double error = control_coefs[0];
   ROS_DEBUG_STREAM("error from coef[0] = "<<error);
+
   ros::Time start_solve = ros::Time::now();
-  mpc.solve(current_linear_velocity, cmd_steer_angle, control_coefs, cmd_steer_rate, cmd_acc);
+  mpc.solve(current_linear_velocity, cmd_steer_angle, control_coefs, cmd_steer_rate, cmd_acc, mpc_x, mpc_y);
   double solve_time = (ros::Time::now() - start_solve).toSec();
   ROS_DEBUG_STREAM("solve time = "<<solve_time);
   ROS_ERROR_STREAM_COND(solve_time > 0.08, "Solve time too big "<<solve_time);
-  apply_control();
-
-  //send trajectory for velocity controller
   publish_trajectory();
   publish_poly();
-
   //send error for debug proposes
   publish_error(cross_track_error());
 //  ROS_DEBUG_STREAM("angular_rate cmd = "<<angular_rate);
+  publish_mpc_traj(mpc_x, mpc_y);
 }
 
 void MPCController::on_pose(const nav_msgs::OdometryConstPtr& odom)
@@ -309,6 +309,22 @@ void MPCController::publish_poly() {
   }
   poly_pub.publish(msg);
 }
+
+void MPCController::publish_mpc_traj(std::vector<double>& x, std::vector<double>& y) {
+  if (x.empty())
+    return;
+  sensor_msgs::PointCloud msg;
+  msg.header.frame_id = world_frame_id;
+  msg.header.stamp = robot_time;
+  static int seq(0);
+  msg.header.seq = seq++;
+  msg.points.reserve( x.size() );
+  for( int i = 0; i < x.size(); ++i) {
+    add_point(msg, robot2world(tf::Vector3(x[i], y[i], 0)));
+  }
+  mpc_traj_pub.publish(msg);
+}
+
 /*!
  * \brief constructor
  * loads parameters from ns
@@ -342,12 +358,14 @@ MPCController::MPCController(const std::string& ns):
     odo_sub( nh.subscribe("odom", 1, &MPCController::on_odo, this)),
     traj_pub( nh.advertise<sensor_msgs::PointCloud>("trajectory", 1) ),
     poly_pub( nh.advertise<sensor_msgs::PointCloud>("poly", 1) ),
+    mpc_traj_pub( nh.advertise<sensor_msgs::PointCloud>("mpc_traj", 1) ),
     mpc_steps( nh.param("mpc_steps", 4) ),
     mpc_dt( nh.param("mpc_dt", 0.5) ),
     mpc(mpc_steps, mpc_dt, max_velocity, max_acc, max_steer_angle, max_steer_rate, wheel_base,
         nh.param("kcte", 1.0),
         nh.param("kepsi", 1.0),
-        nh.param("kev", 1.0))
+        nh.param("kev", 1.0),
+        nh.param("ksteer_cost", 1.0))
 {
   //counter clock
   trajectory.emplace_back( std::make_shared<trajectory::CircularSegment>( 1.0 / radius,    0,       0,    1.0,   0,   M_PI/2*radius) );

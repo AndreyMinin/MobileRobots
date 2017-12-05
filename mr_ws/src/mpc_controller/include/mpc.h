@@ -16,7 +16,7 @@ class MPC
 {
   ACADO::DifferentialState x, y, fi, delta, vel;
   ACADO::Control delta_rate, acc;
-  ACADO::DiscretizedDifferentialEquation f;
+  ACADO::DifferentialEquation f;
   double t_start = 0;
   double t_end;
   double steps;
@@ -29,10 +29,12 @@ class MPC
   double kcte;
   double kepsi;
   double kev;
+  double ksteer_cost;
 public:
-  void solve(double v0, double delta0, std::vector<double>& traj_coef, double& rate_u, double& acc_u);
+  void solve(double v0, double delta0, std::vector<double>& traj_coef, double& rate_u, double& acc_u,
+             std::vector<double>& x, std::vector<double>& y);
   MPC(int steps, double dt, double max_vel, double max_acc, double max_delta, double max_delta_rate, double L,
-      double kcte = 1.0, double kepsi = 1.0, double kev = 1.0);
+      double kcte = 1.0, double kepsi = 1.0, double kev = 1.0, double ksteer_cost = 1.0);
   virtual ~MPC();
 };
 

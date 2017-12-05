@@ -28,7 +28,11 @@ int main(int argc, char* argv[]) {
   c = {-5.93742e-07, 2.15893e-05, 0.0199417, 4.12936e-05};
   v = 1.67203e-11;
   delta = 0;
-  mpc.solve(v, delta, c, r, a);
+  std::vector<double> x,y;
+  mpc.solve(v, delta, c, r, a, x, y);
+  for(int i = 0; i<x.size(); ++i) {
+    std::cout<<"x = "<<x[i]<<" y = "<<y[i]<<std::endl;
+  }
   return 0;
 }
 

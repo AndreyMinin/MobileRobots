@@ -85,6 +85,7 @@ protected:
   ros::Publisher vel_pub;
   ros::Publisher traj_pub;
   ros::Publisher poly_pub;
+  ros::Publisher mpc_traj_pub;
   /// \ frame_id for coordinates of controller
   std::string world_frame_id;
 
@@ -92,6 +93,7 @@ protected:
   double cmd_acc = 0;
   double cmd_steer_angle = 0;
   double cmd_steer_rate = 0;
+  std::vector<double> mpc_x,mpc_y;
 
   void on_timer(const ros::TimerEvent& event);
   void on_pose(const nav_msgs::OdometryConstPtr& odom);
@@ -116,7 +118,7 @@ protected:
 
   std::vector<tf::Vector3> control_points;
   double control_points_dl = 2.0;
-  std::size_t control_points_num = 4;
+  std::size_t control_points_num = 6;
   double mpc_steps ;
   double mpc_dt;
   // coefs for y = f(x) for control points
@@ -133,6 +135,7 @@ protected:
   double polyeval(double x);
   void apply_control();
   void publish_poly();
+  void publish_mpc_traj(std::vector<double>& x, std::vector<double>& y);
 public:
   void reset();
   MPCController(const std::string& ns = "mpc_controller");

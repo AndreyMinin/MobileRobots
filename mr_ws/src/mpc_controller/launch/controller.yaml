@@ -3,8 +3,10 @@ cy: 70.0
 traj_length: 50
 timer_period: 0.1
 max_velocity: 10.0
-mpc_steps: 4
+max_steer_rate: 0.3
+mpc_steps: 6
 mpc_dt: 0.25
-kcte: 1.0
-kepsi: 1.0
-kev: 0.001
+kcte: 1.1
+kepsi: 2.0
+kev: 0.01
+ksteer_cost: 5.0
