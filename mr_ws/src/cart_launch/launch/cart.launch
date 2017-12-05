@@ -1,6 +1,7 @@
 <launch>
+  <arg name="world_name" default="$(find cart_launch)/worlds/simple.world"/>
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find cart_launch)/worlds/simple.world"/>
+    <arg name="world_name" value="$(arg world_name)"/>
     <arg name="verbose" value="true"/>
     <arg name="physics" value="ode"/>
     <arg name="gui" value="false"/>

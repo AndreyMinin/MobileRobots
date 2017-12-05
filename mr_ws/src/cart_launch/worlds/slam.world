@@ -1,0 +1,87 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="default">
+    <include>
+      <uri>model://ground_plane</uri>
+      <size>200 200</size>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+   <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose frame=''>147.417 -99.5481 97.5929 -0 0.559643 2.36819</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+    <include>
+	<uri>model://construction_barrel</uri>
+	<name>l1</name>
+	<pose>0.0 -5.0 0 0 0 0</pose>
+    </include>
+   <include>
+	<uri>model://construction_barrel</uri>
+	<name>l2</name>
+	<pose>0 5.0 0 0 0 0</pose>
+    </include>
+    <include>
+	<uri>model://construction_barrel</uri>
+	<name>l3</name>
+	<pose>10 15.0 0 0 0 0</pose>
+    </include>
+
+    <include>
+	<uri>model://construction_barrel</uri>
+	<name>l4</name>
+	<pose>30 30.0 0 0 0 0</pose>
+    </include>
+
+    <include>
+	<uri>model://construction_barrel</uri>
+	<name>l5</name>
+	<pose>10 50.0 0 0 0 0</pose>
+    </include>
+
+    <include>
+	<uri>model://construction_barrel</uri>
+	<name>l6</name>
+	<pose>30 70 0 0 0 0</pose>
+    </include>
+
+    <include>
+	<uri>model://construction_barrel</uri>
+	<name>l7</name>
+	<pose>40 100 0 0 0 0</pose>
+    </include>
+
+      <include>
+	<uri>model://construction_barrel</uri>
+	<name>l8</name>
+	<pose>-40 100 0 0 0 0</pose>
+    </include>
+
+   <include>
+	<uri>model://construction_barrel</uri>
+	<name>l9</name>
+	<pose>-40 50 0 0 0 0</pose>
+    </include>
+   <include>
+	<uri>model://construction_barrel</uri>
+	<name>l10</name>
+	<pose>-25 30 0 0 0 0</pose>
+    </include>
+
+    <include>
+	<uri>model://construction_barrel</uri>
+	<name>l11</name>
+	<pose>0 85 0 0 0 0</pose>
+    </include>
+    <include>
+	<uri>model://construction_barrel</uri>
+	<name>l12</name>
+	<pose>-10 80 0 0 0 0</pose>
+    </include>
+
+  </world>
+</sdf>
