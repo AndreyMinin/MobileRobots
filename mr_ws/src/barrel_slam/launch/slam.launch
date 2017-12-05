@@ -1,0 +1,6 @@
+<launch>
+	<node name="ekf_slam" pkg="barrel_slam" type="slam_node" output="screen">
+		<remap from="scan" to="/robot/scan"/>
+		<remap from="odo" to="/robot/odom"/>
+	</node>
+</launch>
