@@ -9,10 +9,11 @@ RUN apt-get update && apt-get -y install libopencv-dev build-essential cmake git
 
 RUN apt-get update && apt-get install -y \
         libignition-math3 
-RUN apt-get update && apt-get install -y libsdformat5 \
-        libgazebo8 \
-        gazebo8 \
-        libgazebo8-dev \
+RUN apt-get update && apt-get install -y libsdformat6 \
+        libgazebo9 \
+        gazebo9 \
+        libgazebo9-dev \
+	ros-kinetic-pluginlib \
         ros-kinetic-ros-control \
         ros-kinetic-ros-controllers \
 	ros-kinetic-rosgraph-msgs \
@@ -58,7 +59,7 @@ RUN source /opt/ros/kinetic/setup.bash \
 WORKDIR /opt/
 RUN git clone https://github.com/acado/acado.git
 WORKDIR /opt/acado/build
-RUN cmake .. && make -j4 && make install 
+RUN cmake -DCMAKE_BUILD_TYPE=Release .. && make  -j4 && make install 
 WORKDIR /
 RUN apt-get install -y ros-kinetic-stage-ros
 RUN apt-get install -y python-pip
