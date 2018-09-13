@@ -1,4 +1,4 @@
 #!/bin/bash
-docker run -itd --net=host --rm -p 11311:11311 -e DISPLAY -e VGL_DISPLAY -e ROS_MASTER_URI=http://localhost:11311 -e HUD=1001 -e HGD=1001 -e HGDN=$USER -e HUNAME=$USER -v $PWD:/home/$USER/local/workspace -v /tmp/.X11-unix:/tmp/.X11-unix --privileged -v /dev/bus/usb:/dev/bus/usb -v /dev/v4l:/dev/v4l -v /home/$USER/.Xauthority:/home/$USER/.Xauthority -v/home/$USER/.gazebo:/home/$USER/.gazebo  -v/home/$USER:/host --name $USER-gazebo_ros_image gazebo_ros_$USER-image
+docker run -itd --net=host --rm -p 11311:11311 -e DISPLAY -e VGL_DISPLAY -e ROS_MASTER_URI=http://localhost:11311 -e HUD=1001 -e HGD=1001 -e HGDN=$USER -e HUNAME=$USER -v $PWD:/home/$USER/local/workspace -v /tmp/.X11-unix:/tmp/.X11-unix --privileged -v /dev/bus/usb:/dev/bus/usb -v /dev/v4l:/dev/v4l -v /home/$USER/.Xauthority:/home/$USER/.Xauthority -v/home/$USER/.gazebo:/home/$USER/.gazebo -v/home/$USER/.ros:/home/$USER/.ros -v/home/$USER:/host --name $USER-gazebo_ros_image gazebo_ros_$USER-image
 CMD=/home/$USER/local/workspace/docker/create_user
 docker exec -t -u root $USER-gazebo_ros_image bash -ci $CMD

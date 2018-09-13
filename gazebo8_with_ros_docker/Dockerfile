@@ -9,7 +9,7 @@ RUN apt-get update && apt-get -y install libopencv-dev build-essential cmake git
 
 RUN apt-get update && apt-get install -y \
         libignition-math3 
-RUN apt-get install -y libsdformat5 \
+RUN apt-get update && apt-get install -y libsdformat5 \
         libgazebo8 \
         gazebo8 \
         libgazebo8-dev \
@@ -24,16 +24,21 @@ RUN apt-get install -y libsdformat5 \
         ros-kinetic-roslint \
         ros-kinetic-nmea-navsat-driver \
         ros-kinetic-opencv3 \
+	ros-kinetic-cv-bridge \
         ros-kinetic-grid-map \
         ros-kinetic-camera-info-manager-py \
 	ros-kinetic-image-transport \
 	ros-kinetic-camera-calibration-parsers \
 	ros-kinetic-polled-camera \
 	ros-kinetic-camera-info-manager \
+	ros-kinetic-pcl-ros \
+	libpcap-dev \
         libcamera-info-manager-dev \
         libnlopt-dev freeglut3-dev \
         libomp-dev \
         libssh2-1-dev libarmadillo-dev libpcap-dev gksu
+
+RUN apt-get update && apt-get install -y qtcreator qt5-default
 
 WORKDIR /catkin_ws/src
 RUN git clone https://github.com/ros-simulation/gazebo_ros_pkgs.git -b kinetic-devel
@@ -42,9 +47,23 @@ WORKDIR /catkin_ws
 RUN source /opt/ros/kinetic/setup.bash \
 	&& catkin_init_workspace src \
 	&& catkin_make -DCMAKE_INSTALL_PREFIX=/opt/ros/kinetic -DCMAKE_BUILD_TYPE=Release install
+
+WORKDIR /ros_opt/src
+RUN git clone https://github.com/ros-drivers/velodyne.git
+WORKDIR /ros_opt
+RUN source /opt/ros/kinetic/setup.bash \
+	&& catkin_init_workspace src \
+	&& catkin_make -DCMAKE_INSTALL_PREFIX=/opt/ros/kinetic -DCMAKE_BUILD_TYPE=Release install
+
 WORKDIR /opt/
 RUN git clone https://github.com/acado/acado.git
 WORKDIR /opt/acado/build
 RUN cmake .. && make -j4 && make install 
 WORKDIR /
+RUN apt-get install -y ros-kinetic-stage-ros
+RUN apt-get install -y python-pip
+RUN pip install gdbgui --upgrade
+RUN apt-get update && apt-get install -y ros-kinetic-gmapping
+RUN apt-get update && apt-get install -y ros-kinetic-navigation
+
 
