@@ -1,12 +1,17 @@
 Использование docker
 
-0. Установка Docker. https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#os-requirements
-Команды выполняются из папки, куда клонирован репозитарий
-1. Сборка образа (выполняется один раз, а также при изменении файла образа Dockerfile) 
+0. Устанавливаем Docker
+	https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#os-requirements
+1. Настраиваем Docker для работы с ним без root доступа (без sudo)
+	https://docs.docker.com/install/linux/linux-postinstall/
+2. Клонируем репозиторий Git
+	$git clone https://github.com/AndreyMinin/MobileRobots.git ~/local/MobileRobots
+3. Перемещаемся в директорию, куда был скачан репозиторий
+	$cd ~/local/MobileRobots
+4. Собираем образ (выполняется один раз, а также при изменении файла образа Dockerfile)
 	$docker/build_docker
-2. Запуск контейнера 
+5. Запускаем контейнер
 	$docker/start_docker
-3. Запуск консоли в контейнере. (можно выполнить несколько раз - сколько нужно терминалов внутри докера)
+6. Запускаем консоль в контейнере (можно выполнить несколько раз - сколько нужно терминалов внутри докера)
 	$docker/attach_docker
-В результатое оказываемся в ROS воркспейсе с проектом
-	
+В результатое оказываемся в готовом к работе ROS воркспейсе с проектом
