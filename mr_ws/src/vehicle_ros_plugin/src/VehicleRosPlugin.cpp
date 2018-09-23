@@ -7,7 +7,6 @@
 
 #include <algorithm>
 #include <sdf/sdf.hh>
-#include <gazebo/math/gzmath.hh>
 #include <ros/ros.h>
 #include "VehicleRosPlugin.h"
 #include <functional>
