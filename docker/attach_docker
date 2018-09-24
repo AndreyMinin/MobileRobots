@@ -1,1 +1,1 @@
-docker exec -it -u 1001 $USER-gazebo_ros_image bash
+docker exec -it -u $(id -u $USER) $USER-gazebo_ros_image bash
