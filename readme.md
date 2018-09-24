@@ -1,6 +1,6 @@
 Использование docker
 
-0. Установливаем Docker по инструкции. https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#os-requirements. Настраиваем Docker для работы с ним без root доступа (без sudo) https://docs.docker.com/install/linux/linux-postinstall/
+0. Установливаем Docker по инструкции: https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#os-requirements. Настраиваем Docker для работы с ним без root доступа (без sudo): https://docs.docker.com/install/linux/linux-postinstall/
 Следующие команды выполняем из папки, куда клонирован репозиторий из под обычного пользователя
 1. Собираем образ (выполняется один раз, а также при изменении файла образа Dockerfile) 
 ``` bash
@@ -27,7 +27,7 @@ $ exit
 после этого терминал окажется в основной системе
 6. Для просмотра текущих запущенных образов докера можно использовать команду:
 ``` bash
-$docker ps
+$ docker ps
 ```
 7. Для того, чтобы остановить докер:
 ``` bash
