@@ -9,9 +9,10 @@ groupadd -f $HUNAME -g $HGD
 
 usermod -aG sudo $HUNAME
 
-chown $HUNAME /home/$HUNAME
+
 
 echo "source /home/$HUNAME/local/workspace/docker/.bashrc" >> /home/$HUNAME/.bashrc
 echo "$HUNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/$HUNAME
+chown -R $HUNAME /home/$HUNAME
 echo "User configuration is ended"
 
