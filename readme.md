@@ -1,8 +1,11 @@
 Использование docker
-
 0. Установливаем Docker по инструкции: https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#os-requirements. Настраиваем Docker для работы с ним без root доступа (без sudo): https://docs.docker.com/install/linux/linux-postinstall/
 Следующие команды выполняем из папки, куда клонирован репозиторий из под обычного пользователя
 1. Собираем образ (выполняется один раз, а также при изменении файла образа Dockerfile) 
+``` bash
+$ docker/build_docker
+```
+Либо скачиваем готовый образ с помощью команды: (это будет быстрее сборки, при наличии хорошего интернет соединения)
 ``` bash
 $ docker/build_docker
 ```

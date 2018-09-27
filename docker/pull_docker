@@ -1,0 +1,3 @@
+#!/bin/bash
+docker pull  andreyminin/gazebo9_ros
+docker image tag andreyminin/gazebo9_ros gazebo_ros_$USER-image
