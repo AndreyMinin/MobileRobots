@@ -1,0 +1,9 @@
+<launch>
+   <node pkg="stage_ros" type="stageros" name="model"
+     args="$(find cart_launch)/stage_worlds/empty.world">
+	<remap from="/odom" to="/robot/odom"/>
+	<remap from="/base_pose_ground_truth" to="/robot/base_pose_ground_truth"/>
+   </node>
+
+
+</launch>
