@@ -1,0 +1,26 @@
+<launch>
+	<env name="ROSCONSOLE_CONFIG_FILE"
+       value="$(find mpc_controller)/config/rosconsole.config"/>
+    <!-- start cart in stage world -->
+    <include file="$(find cart_launch)/launch/cart_stage.launch">
+    </include>
+    <!-- start mpc controller -->
+    <node name="controller" pkg="mpc_controller" type="mpc_controller" output="screen">
+    	<rosparam command="load" file="$(find mpc_controller)/launch/controller.yaml" ns="mpc_controller" />
+    	<remap from="/controller/mpc_controller/ground_truth" to="/robot/base_pose_ground_truth"/>
+    	<remap from="/controller/mpc_controller/odom" to="/robot/odom"/>
+    	<remap from="steering" to="/robot/steering"/>
+    	<remap from="velocity" to="/robot/velocity"/>
+    </node>
+
+	<node name="rqt" pkg="mpc_controller" type="start_rqt" args="--perspective-file $(find mpc_controller)/rqt/steer_error.perspective" output="screen">
+    </node>
+
+    <!-- start gzclient via script -->
+    <!--
+    <node name="gzclient" pkg="simple_controller" type="start_gzclient" output="screen">
+    </node>
+	-->
+	<node name="rviz" pkg="rviz" type="rviz" args="--display-config $(find mpc_controller)/rviz/traj.rviz">
+	</node>
+</launch>

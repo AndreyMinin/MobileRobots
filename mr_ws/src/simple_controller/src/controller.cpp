@@ -48,7 +48,7 @@ void Controller::update_trajectory_segment()
 
 void Controller::update_robot_pose(double dt)
 {
-//  ROS_DEBUG_STREAM("update_robot_pose "<<dt<<" v = "<<current_linear_velocity );
+  ROS_DEBUG_STREAM("update_robot_pose "<<dt<<" v = "<<current_linear_velocity );
   robot_x += current_linear_velocity * dt * sin(robot_theta);
   robot_y += current_linear_velocity * dt * cos(robot_theta);
   robot_theta = angles::normalize_angle(robot_theta + current_angular_velocity * dt);
@@ -59,6 +59,9 @@ void Controller::update_robot_pose(double dt)
 
 void Controller::on_timer(const ros::TimerEvent& event)
 {
+  if (std::abs(current_linear_velocity) < 0.01) {
+    return;
+  }
   update_robot_pose((ros::Time::now() - robot_time).toSec() );
   update_trajectory_segment();
 
@@ -93,7 +96,7 @@ void Controller::on_timer(const ros::TimerEvent& event)
 
   //send error for debug proposes
   publish_error(error);
-//  ROS_DEBUG_STREAM("angular_rate cmd = "<<angular_rate);
+  ROS_DEBUG_STREAM("steering cmd = "<<curvature);
 }
 
 void Controller::on_pose(const nav_msgs::OdometryConstPtr& odom)

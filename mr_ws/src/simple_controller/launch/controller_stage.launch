@@ -1,7 +1,7 @@
 <launch>
 	<env name="ROSCONSOLE_CONFIG_FILE"
        value="$(find simple_controller)/config/rosconsole.config"/>
-    <!-- start cart in gazebo world -->
+    <!-- start cart in stage world -->
     <include file="$(find cart_launch)/launch/cart_stage.launch">
     </include>
     <!-- start simple controller -->
