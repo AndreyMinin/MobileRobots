@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <queue>
+#include <set>
 #include <utility>
 
 namespace simple_planner
@@ -137,7 +138,10 @@ class CompareSearchNodes {
 public:
   CompareSearchNodes(){}
   bool operator () (const SearchNode* left, const SearchNode* right) const {
-    return left->g + left->h > right->g + right->h;
+    if (left->g + left->h < right->g + right->h) {
+        return true;
+    }
+    return left < right;
   }
 };
 
@@ -149,14 +153,28 @@ void Planner::calculate_path()
   path_msg_.poses.clear();
 
   // Здесь необходимо поместить код для поиска пути
-  std::priority_queue<SearchNode*, std::vector<SearchNode*>,  CompareSearchNodes> queue;
+  std::set<SearchNode*, CompareSearchNodes> queue;
   int start_i = floor((start_pose_.position.x - map_.info.origin.position.x)/ map_.info.resolution);
   int start_j = floor((start_pose_.position.y - map_.info.origin.position.y)/ map_.info.resolution);
   SearchNode& start = map_value(search_map_, start_i, start_j);
   start.g = 0;
   start.h = heruistic(start_i, start_j);
   start.state = SearchNode::OPEN;
-  queue.push(&start);
+  queue.insert(&start);
+
+
+  // for test delete next lines
+  SearchNode& next = map_value(search_map_, start_i + 1, start_j);
+  next.g = 1;
+  queue.insert(&next);
+  next.g = 2;
+  queue.insert(&next);
+
+  for(auto& ptr : queue) {
+      ROS_INFO_STREAM("que " << ptr->g);
+  }
+
+
 
 
 }
