@@ -1,0 +1,24 @@
+<launch>
+    <!-- start cart in stage world -->
+    <include file="$(find cart_launch)/launch/cart_stage.launch">
+    	<arg name="world" value="$(find cart_launch)/stage_worlds/feature_map.world"/>
+    </include>
+    <!-- start simple controller -->
+    <node name="controller" pkg="simple_controller" type="controller_node" output="screen">
+    	<rosparam command="load" file="$(find simple_controller)/launch/controller.yaml" ns="simple_controller" />
+    	<remap from="/controller/simple_controller/ground_truth" to="/robot/base_pose_ground_truth"/>
+    	<remap from="/controller/simple_controller/odom" to="/robot/odom"/>
+    	<remap from="steering" to="/robot/steering"/>
+    </node>
+    <!-- start sending velocity command -->
+    <node name="vel_node" pkg="rostopic" type="rostopic" args="pub /robot/velocity std_msgs/Float32  2.0 -r1">
+    </node>
+   <!-- start rqt via script -->
+   <!--
+    <node name="rqt" pkg="rqt_gui" type="rqt_gui" args="--perspective-file $(find simple_controller)/cfg/steer_error.perspective" output="screen">
+    </node>
+    -->
+	<node name="matcher" pkg="feature_matcher" type="feature_matcher" output="screen">
+
+	</node>
+</launch>
