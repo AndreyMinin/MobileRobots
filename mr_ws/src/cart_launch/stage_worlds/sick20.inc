@@ -2,7 +2,7 @@
 define sicksensor sensor
 (
   # factory settings for LMS200
-  range [ 0.0 80.0 ]
+  range [ 0.0 50.0 ]
   pose [ 0 0 0.1 0 ]
   fov 180
   samples 180

@@ -138,10 +138,10 @@ class CompareSearchNodes {
 public:
   CompareSearchNodes(){}
   bool operator () (const SearchNode* left, const SearchNode* right) const {
-    if (left->g + left->h < right->g + right->h) {
-        return true;
+    if (left->g + left->h == right->g + right->h) {
+      return left < right;
     }
-    return left < right;
+    return left->g + left->h < right->g + right->h;
   }
 };
 

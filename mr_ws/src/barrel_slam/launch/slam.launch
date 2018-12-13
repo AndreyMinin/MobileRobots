@@ -1,6 +1,20 @@
 <launch>
 	<node name="ekf_slam" pkg="barrel_slam" type="slam_node" output="screen">
-		<remap from="scan" to="/robot/scan"/>
-		<remap from="odo" to="/robot/odom"/>
+		<remap from="/scan" to="/base_scan"/>
+		<remap from="/odom" to="/robot/odom"/>
 	</node>
+    <!-- start cart in stage world -->
+    <include file="$(find cart_launch)/launch/cart_stage.launch">
+    	<arg name="world" value="$(find cart_launch)/stage_worlds/kalman_map.world"/>
+    </include>
+    <!-- start simple controller -->
+    <node name="controller" pkg="simple_controller" type="controller_node" output="log">
+    	<rosparam command="load" file="$(find simple_controller)/launch/controller.yaml" ns="simple_controller" />
+    	<remap from="/controller/simple_controller/ground_truth" to="/robot/base_pose_ground_truth"/>
+    	<remap from="/controller/simple_controller/odom" to="/robot/odom"/>
+    	<remap from="steering" to="/robot/steering"/>
+    </node>
+    <!-- start sending velocity command -->
+    <node name="vel_node" pkg="rostopic" type="rostopic" args="pub /robot/velocity std_msgs/Float32  2.0 -r1">
+    </node>
 </launch>

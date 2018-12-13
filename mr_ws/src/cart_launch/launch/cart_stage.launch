@@ -6,7 +6,7 @@
 	<remap from="/base_pose_ground_truth" to="/robot/base_pose_ground_truth"/>
    </node>
 
-   <node pkg="stage_controller" type="stage_controller" name="robot" output="screen">
+   <node pkg="stage_controller" type="stage_controller" name="robot" output="log">
    		<param name="length" value="1.5"/>
    		<param name="max_steering" value="0.5"/>
    		<param name="max_steering_rate" value="1.0"/>
