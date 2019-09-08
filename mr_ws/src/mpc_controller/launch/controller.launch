@@ -1,8 +1,10 @@
 <launch>
 	<env name="ROSCONSOLE_CONFIG_FILE"
        value="$(find mpc_controller)/config/rosconsole.config"/>
+    <arg name="world_name" default="simple.world"/>
     <!-- start cart in gazebo world -->
     <include file="$(find cart_launch)/launch/cart.launch">
+	<arg name="world_name" value="$(arg world_name)"/>
     </include>
     <!--  start tf from odo ground truth mesages for cart -->
     <node name="odo2tf" pkg="odo2tf" type="odo2tf" output="screen">

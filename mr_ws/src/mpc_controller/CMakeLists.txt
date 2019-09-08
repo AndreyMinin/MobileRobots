@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.10)
 project(mpc_controller)
 
 ## Add support for C++11, supported in ROS Kinetic and newer
 add_definitions(-std=c++11)
+
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -71,11 +72,14 @@ include_directories(
   ${ACADO_INCLUDE_DIRS}
   include
 )
+link_directories(${ACADO_LIBRARY_DIRS})
+
 add_executable(mpc_controller src/mpccontroller_node.cpp
                                 src/mpccontroller.cpp
                                 src/mpc.cpp)
+
 target_link_libraries(mpc_controller
-  ${catkin_LIBRARIES}
+  ${catkin_LIBRARIES}  
   ${ACADO_SHARED_LIBRARIES}
 )
 
