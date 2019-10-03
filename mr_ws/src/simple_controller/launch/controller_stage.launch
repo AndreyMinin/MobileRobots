@@ -1,11 +1,11 @@
 <launch>
 	<env name="ROSCONSOLE_CONFIG_FILE"
        value="$(find simple_controller)/config/rosconsole.config"/>
-    <arg name="control" default="velocity"/>
+    <arg name="control_velocity" default="true"/>
     <arg name="rqt_persp" default="$(find simple_controller)/cfg/steer_error.perspective"/>
     <!-- start cart in stage world -->
     <include file="$(find cart_launch)/launch/cart_stage.launch">
-    	<arg name="control" value="$(arg control)"/>    	
+    	<arg name="control_velocity" value="$(arg control_velocity)"/>    	
     </include>
     <!-- start simple controller -->
     <node name="controller" pkg="simple_controller" type="controller_node" output="screen">

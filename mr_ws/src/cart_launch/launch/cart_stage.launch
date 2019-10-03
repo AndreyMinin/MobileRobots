@@ -1,6 +1,6 @@
 <launch>
 ```<arg name="world" default="$(find cart_launch)/stage_worlds/empty.world"/>
-   <arg name="control" default="velocity"/>
+   <arg name="control_velocity" default="true"/>
    <param name="/use_sim_time" value="true"/>
 
    <node pkg="stage_ros" type="stageros" name="model" args="$(arg world)">
@@ -8,7 +8,7 @@
 	  <remap from="/base_pose_ground_truth" to="/robot/base_pose_ground_truth"/>
    </node>
 
-   <node pkg="stage_controller" type="stage_controller" name="robot" output="log" if="$(eval control=='velocity')">
+   <node pkg="stage_controller" type="stage_controller" name="robot" output="log" if="$(arg control_velocity)">
 		<param name="length" value="1.5"/>
 		<param name="max_steering" value="0.5"/>
 		<param name="max_steering_rate" value="1.0"/>
@@ -16,7 +16,7 @@
 		<param name="max_acc" value="2.0"/>
    </node>
 
-   <node pkg="stage_controller" type="stage_throttle" name="robot" output="screen" if="$(eval control=='throttle')">
+   <node pkg="stage_controller" type="stage_throttle" name="robot" output="screen" unless="$(arg control_velocity)">
       <param name="length" value="1.5"/>
       <param name="max_steering" value="0.5"/>
       <param name="max_steering_rate" value="1.0"/>
