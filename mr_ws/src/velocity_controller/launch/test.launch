@@ -1,0 +1,9 @@
+<launch>
+  <node name="vtest" pkg="velocity_controller" type="velocity_test" output="screen">
+    <remap from="/vtest/odom" to="/robot/odom"/>
+    <remap from="/vtest/velocity" to="/robot/velocity"/>
+    <param name="test_time" value="15"/>
+    <param name="acc" value="1.5"/>
+    <param name="max_velocity" value="5"/>
+  </node>
+</launch>

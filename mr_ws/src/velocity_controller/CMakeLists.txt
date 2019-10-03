@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(stage_controller)
+project(velocity_controller)
 
 ## Add support for C++11, supported in ROS Kinetic and newer
 add_definitions(-std=c++11)
@@ -10,6 +10,7 @@ add_definitions(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  nav_msgs
   geometry_msgs
 )
 
@@ -20,14 +21,14 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(stage_controller src/stage_controller.cpp)
+add_executable(velocity_controller src/velocity_controller.cpp)
 
-target_link_libraries(stage_controller
+target_link_libraries(velocity_controller
   ${catkin_LIBRARIES}
 )
 
-add_executable(stage_throttle src/stage_throttle.cpp)
+add_executable(velocity_test src/velocity_test.cpp)
 
-target_link_libraries(stage_throttle
+target_link_libraries(velocity_test
   ${catkin_LIBRARIES}
 )

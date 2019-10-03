@@ -1,0 +1,7 @@
+<launch>
+<node pkg="velocity_controller" name="throttle_controller" type="velocity_controller" output="screen">
+    <remap from="/throttle_controller/odom" to="/robot/odom"/>
+    <remap from="/throttle_controller/velocity" to="/robot/velocity"/>
+    <remap from="/throttle_controller/throttle" to="/robot/throttle"/>
+</node>
+</launch>
