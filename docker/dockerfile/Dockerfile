@@ -10,7 +10,8 @@ RUN apt-get install -y \
         ros-melodic-gazebo-ros \
 	ros-melodic-gazebo-plugins \
 	ros-melodic-acado \
-	ros-melodic-stage-ros
+	ros-melodic-stage-ros \
+	ros-melodic-map-server
 
 RUN apt-get update && apt-get install -y qtcreator qt5-default
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh

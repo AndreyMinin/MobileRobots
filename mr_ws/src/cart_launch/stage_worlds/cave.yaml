@@ -1,4 +1,4 @@
-image: cave.png
+image: bitmaps/cave.png
 resolution: 0.032
 origin: [-8.0, -8.0, .0]
 occupied_thresh: 0.65
