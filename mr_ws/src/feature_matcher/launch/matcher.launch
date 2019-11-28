@@ -13,11 +13,7 @@
     <!-- start sending velocity command -->
     <node name="vel_node" pkg="rostopic" type="rostopic" args="pub /robot/velocity std_msgs/Float32  2.0 -r1">
     </node>
-   <!-- start rqt via script -->
-   <!--
-    <node name="rqt" pkg="rqt_gui" type="rqt_gui" args="--perspective-file $(find simple_controller)/cfg/steer_error.perspective" output="screen">
-    </node>
-    -->
+
 	<node name="matcher" pkg="feature_matcher" type="feature_matcher" output="screen">
 
 	</node>

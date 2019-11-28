@@ -14,15 +14,16 @@ find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   tf
 )
+find_package(cmake_modules REQUIRED)
 
-find_package(Eigen3 REQUIRED)
+find_package(Eigen REQUIRED)
 
 catkin_package(
 )
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
-  ${EIGEN3_INCLUDE_DIRS}
+  ${EIGEN_INCLUDE_DIRS}
 )
 
 add_executable(feature_matcher src/feature_matcher.cpp
