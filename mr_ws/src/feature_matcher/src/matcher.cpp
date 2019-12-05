@@ -123,7 +123,7 @@ void Matcher::find_transform()
   	R (0, 1) = -sin (angle);
   	R (1, 0) = sin (angle);
 	Eigen::Vector2d t = base_center - R * new_center;
-	Eigen::Isometry2d result = Eigen::Translation2d(t) * Eigen::Rotation2D<double>(R);
+	Eigen::Isometry2d result = Eigen::Translation2d(t) * Eigen::Isometry2d(R);
 
 	// обновляем трансформы
 	incremental_transform = result * incremental_transform;
