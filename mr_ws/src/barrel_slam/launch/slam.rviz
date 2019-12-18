@@ -6,11 +6,10 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /robot_pose1
         - /robot_pose1/Covariance1
         - /robot_pose1/Covariance1/Position1
       Splitter Ratio: 0.5
-    Tree Height: 558
+    Tree Height: 555
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -19,7 +18,7 @@ Panels:
       - /2D Nav Goal1
       - /Publish Point1
     Name: Tool Properties
-    Splitter Ratio: 0.588679016
+    Splitter Ratio: 0.5886790156364441
   - Class: rviz/Views
     Expanded:
       - /Current View1
@@ -30,6 +29,10 @@ Panels:
     Name: Time
     SyncMode: 0
     SyncSource: ""
+Preferences:
+  PromptSaveOnExit: true
+Toolbars:
+  toolButtonStyle: 2
 Visualization Manager:
   Class: ""
   Displays:
@@ -39,7 +42,7 @@ Visualization Manager:
       Color: 160; 160; 164
       Enabled: true
       Line Style:
-        Line Width: 0.0299999993
+        Line Width: 0.029999999329447746
         Value: Lines
       Name: Grid
       Normal Cell Count: 0
@@ -53,7 +56,7 @@ Visualization Manager:
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.100000001
+      Axes Radius: 0.10000000149011612
       Class: rviz/PoseWithCovariance
       Color: 255; 25; 0
       Covariance:
@@ -66,24 +69,24 @@ Visualization Manager:
           Scale: 1
           Value: false
         Position:
-          Alpha: 0.300000012
+          Alpha: 0.30000001192092896
           Color: 85; 255; 127
           Scale: 1
           Value: true
         Value: true
       Enabled: true
       Head Length: 0.5
-      Head Radius: 0.300000012
+      Head Radius: 0.30000001192092896
       Name: robot_pose
       Shaft Length: 1
-      Shaft Radius: 0.200000003
+      Shaft Radius: 0.20000000298023224
       Shape: Arrow
       Topic: /ekf_slam/slam_pose
       Unreliable: false
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.100000001
+      Axes Radius: 0.10000000149011612
       Class: rviz/PoseWithCovariance
       Color: 255; 25; 0
       Covariance:
@@ -96,24 +99,24 @@ Visualization Manager:
           Scale: 1
           Value: true
         Position:
-          Alpha: 0.300000012
+          Alpha: 0.30000001192092896
           Color: 204; 51; 204
           Scale: 1
           Value: true
         Value: true
       Enabled: true
-      Head Length: 0.300000012
-      Head Radius: 0.100000001
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
       Name: landmark0
       Shaft Length: 1
-      Shaft Radius: 0.0500000007
+      Shaft Radius: 0.05000000074505806
       Shape: Arrow
       Topic: /ekf_slam/landmark0
       Unreliable: false
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.100000001
+      Axes Radius: 0.10000000149011612
       Class: rviz/PoseWithCovariance
       Color: 255; 25; 0
       Covariance:
@@ -126,24 +129,24 @@ Visualization Manager:
           Scale: 1
           Value: true
         Position:
-          Alpha: 0.300000012
+          Alpha: 0.30000001192092896
           Color: 204; 51; 204
           Scale: 1
           Value: true
         Value: true
       Enabled: true
-      Head Length: 0.300000012
-      Head Radius: 0.100000001
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
       Name: landmark1
       Shaft Length: 1
-      Shaft Radius: 0.0500000007
+      Shaft Radius: 0.05000000074505806
       Shape: Arrow
       Topic: /ekf_slam/landmark1
       Unreliable: false
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.100000001
+      Axes Radius: 0.10000000149011612
       Class: rviz/PoseWithCovariance
       Color: 255; 25; 0
       Covariance:
@@ -156,24 +159,24 @@ Visualization Manager:
           Scale: 1
           Value: true
         Position:
-          Alpha: 0.300000012
+          Alpha: 0.30000001192092896
           Color: 204; 51; 204
           Scale: 1
           Value: true
         Value: true
       Enabled: true
-      Head Length: 0.300000012
-      Head Radius: 0.100000001
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
       Name: landmark2
       Shaft Length: 1
-      Shaft Radius: 0.0500000007
+      Shaft Radius: 0.05000000074505806
       Shape: Arrow
       Topic: /ekf_slam/landmark2
       Unreliable: false
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.100000001
+      Axes Radius: 0.10000000149011612
       Class: rviz/PoseWithCovariance
       Color: 255; 25; 0
       Covariance:
@@ -186,24 +189,24 @@ Visualization Manager:
           Scale: 1
           Value: true
         Position:
-          Alpha: 0.300000012
+          Alpha: 0.30000001192092896
           Color: 204; 51; 204
           Scale: 1
           Value: true
         Value: true
       Enabled: true
-      Head Length: 0.300000012
-      Head Radius: 0.100000001
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
       Name: landmark3
       Shaft Length: 1
-      Shaft Radius: 0.0500000007
+      Shaft Radius: 0.05000000074505806
       Shape: Arrow
       Topic: /ekf_slam/landmark3
       Unreliable: false
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.100000001
+      Axes Radius: 0.10000000149011612
       Class: rviz/PoseWithCovariance
       Color: 255; 25; 0
       Covariance:
@@ -216,24 +219,24 @@ Visualization Manager:
           Scale: 1
           Value: true
         Position:
-          Alpha: 0.300000012
+          Alpha: 0.30000001192092896
           Color: 204; 51; 204
           Scale: 1
           Value: true
         Value: true
       Enabled: true
-      Head Length: 0.300000012
-      Head Radius: 0.100000001
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
       Name: landmark4
       Shaft Length: 1
-      Shaft Radius: 0.0500000007
+      Shaft Radius: 0.05000000074505806
       Shape: Arrow
       Topic: /ekf_slam/landmark4
       Unreliable: false
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.100000001
+      Axes Radius: 0.10000000149011612
       Class: rviz/PoseWithCovariance
       Color: 255; 25; 0
       Covariance:
@@ -246,24 +249,24 @@ Visualization Manager:
           Scale: 1
           Value: true
         Position:
-          Alpha: 0.300000012
+          Alpha: 0.30000001192092896
           Color: 204; 51; 204
           Scale: 1
           Value: true
         Value: true
       Enabled: true
-      Head Length: 0.300000012
-      Head Radius: 0.100000001
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
       Name: landmark5
       Shaft Length: 1
-      Shaft Radius: 0.0500000007
+      Shaft Radius: 0.05000000074505806
       Shape: Arrow
       Topic: /ekf_slam/landmark5
       Unreliable: false
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.100000001
+      Axes Radius: 0.10000000149011612
       Class: rviz/PoseWithCovariance
       Color: 255; 25; 0
       Covariance:
@@ -276,24 +279,24 @@ Visualization Manager:
           Scale: 1
           Value: true
         Position:
-          Alpha: 0.300000012
+          Alpha: 0.30000001192092896
           Color: 204; 51; 204
           Scale: 1
           Value: true
         Value: true
       Enabled: true
-      Head Length: 0.300000012
-      Head Radius: 0.100000001
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
       Name: landmark6
       Shaft Length: 1
-      Shaft Radius: 0.0500000007
+      Shaft Radius: 0.05000000074505806
       Shape: Arrow
       Topic: /ekf_slam/landmark6
       Unreliable: false
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.100000001
+      Axes Radius: 0.10000000149011612
       Class: rviz/PoseWithCovariance
       Color: 255; 25; 0
       Covariance:
@@ -306,24 +309,24 @@ Visualization Manager:
           Scale: 1
           Value: true
         Position:
-          Alpha: 0.300000012
+          Alpha: 0.30000001192092896
           Color: 204; 51; 204
           Scale: 1
           Value: true
         Value: true
       Enabled: true
-      Head Length: 0.300000012
-      Head Radius: 0.100000001
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
       Name: landmark7
       Shaft Length: 1
-      Shaft Radius: 0.0500000007
+      Shaft Radius: 0.05000000074505806
       Shape: Arrow
       Topic: /ekf_slam/landmark7
       Unreliable: false
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.100000001
+      Axes Radius: 0.10000000149011612
       Class: rviz/PoseWithCovariance
       Color: 255; 25; 0
       Covariance:
@@ -336,24 +339,24 @@ Visualization Manager:
           Scale: 1
           Value: true
         Position:
-          Alpha: 0.300000012
+          Alpha: 0.30000001192092896
           Color: 204; 51; 204
           Scale: 1
           Value: true
         Value: true
       Enabled: true
-      Head Length: 0.300000012
-      Head Radius: 0.100000001
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
       Name: landmark8
       Shaft Length: 1
-      Shaft Radius: 0.0500000007
+      Shaft Radius: 0.05000000074505806
       Shape: Arrow
       Topic: /ekf_slam/landmark8
       Unreliable: false
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.100000001
+      Axes Radius: 0.10000000149011612
       Class: rviz/PoseWithCovariance
       Color: 255; 25; 0
       Covariance:
@@ -366,24 +369,24 @@ Visualization Manager:
           Scale: 1
           Value: true
         Position:
-          Alpha: 0.300000012
+          Alpha: 0.30000001192092896
           Color: 204; 51; 204
           Scale: 1
           Value: true
         Value: true
       Enabled: true
-      Head Length: 0.300000012
-      Head Radius: 0.100000001
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
       Name: landmark9
       Shaft Length: 1
-      Shaft Radius: 0.0500000007
+      Shaft Radius: 0.05000000074505806
       Shape: Arrow
       Topic: /ekf_slam/landmark9
       Unreliable: false
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.100000001
+      Axes Radius: 0.10000000149011612
       Class: rviz/PoseWithCovariance
       Color: 255; 25; 0
       Covariance:
@@ -396,24 +399,24 @@ Visualization Manager:
           Scale: 1
           Value: true
         Position:
-          Alpha: 0.300000012
+          Alpha: 0.30000001192092896
           Color: 204; 51; 204
           Scale: 1
           Value: true
         Value: true
       Enabled: true
-      Head Length: 0.300000012
-      Head Radius: 0.100000001
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
       Name: landmark10
       Shaft Length: 1
-      Shaft Radius: 0.0500000007
+      Shaft Radius: 0.05000000074505806
       Shape: Arrow
       Topic: /ekf_slam/landmark10
       Unreliable: false
       Value: true
     - Alpha: 1
       Axes Length: 1
-      Axes Radius: 0.100000001
+      Axes Radius: 0.10000000149011612
       Class: rviz/PoseWithCovariance
       Color: 255; 25; 0
       Covariance:
@@ -426,26 +429,146 @@ Visualization Manager:
           Scale: 1
           Value: true
         Position:
-          Alpha: 0.300000012
+          Alpha: 0.30000001192092896
           Color: 204; 51; 204
           Scale: 1
           Value: true
         Value: true
       Enabled: true
-      Head Length: 0.300000012
-      Head Radius: 0.100000001
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
       Name: landmark11
       Shaft Length: 1
-      Shaft Radius: 0.0500000007
+      Shaft Radius: 0.05000000074505806
       Shape: Arrow
       Topic: /ekf_slam/landmark11
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz/PoseWithCovariance
+      Color: 255; 25; 0
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: landmark12
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic: /ekf_slam/landmark12
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz/PoseWithCovariance
+      Color: 255; 25; 0
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: landmark13
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic: /ekf_slam/landmark13
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz/PoseWithCovariance
+      Color: 255; 25; 0
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: landmark14
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic: /ekf_slam/landmark14
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz/PoseWithCovariance
+      Color: 255; 25; 0
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: landmark15
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic: /ekf_slam/landmark15
       Unreliable: false
       Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: odom
+    Fixed Frame: map
     Frame Rate: 30
   Name: root
   Tools:
@@ -456,7 +579,10 @@ Visualization Manager:
     - Class: rviz/FocusCamera
     - Class: rviz/Measure
     - Class: rviz/SetInitialPose
+      Theta std deviation: 0.2617993950843811
       Topic: /initialpose
+      X std deviation: 0.5
+      Y std deviation: 0.5
     - Class: rviz/SetGoal
       Topic: /move_base_simple/goal
     - Class: rviz/PublishPoint
@@ -465,29 +591,29 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: -0.409999967
+      Angle: -0.4099999666213989
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
-        Stereo Eye Separation: 0.0599999987
+        Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Invert Z Axis: false
       Name: Current View
-      Near Clip Distance: 0.00999999978
-      Scale: 0.635678053
+      Near Clip Distance: 0.009999999776482582
+      Scale: 3.5585062503814697
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 5.24258232
-      Y: -6.06210899
+      X: 5.242582321166992
+      Y: -6.062108993530273
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
   Height: 846
   Hide Left Dock: false
-  Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd000000040000000000000156000002b6fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003a000002b6000000c600fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f000002b6fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003a000002b60000009e00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004b00000003efc0100000002fb0000000800540069006d00650100000000000004b00000024400fffffffb0000000800540069006d006501000000000000045000000000000000000000023f000002b600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Hide Right Dock: true
+  QMainWindow State: 000000ff00000000fd000000040000000000000156000002b4fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003b000002b4000000c700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f000002b4fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003b000002b4000000a000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004b00000003efc0100000002fb0000000800540069006d00650100000000000004b00000024400fffffffb0000000800540069006d0065010000000000000450000000000000000000000354000002b400000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -495,7 +621,7 @@ Window Geometry:
   Tool Properties:
     collapsed: false
   Views:
-    collapsed: false
+    collapsed: true
   Width: 1200
-  X: 65
+  X: 117
   Y: 60

@@ -17,4 +17,7 @@
     <!-- start sending velocity command -->
     <node name="vel_node" pkg="rostopic" type="rostopic" args="pub /robot/velocity std_msgs/Float32  2.0 -r1">
     </node>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="--display-config $(find barrel_slam)/launch/slam.rviz">
+    </node>
 </launch>
