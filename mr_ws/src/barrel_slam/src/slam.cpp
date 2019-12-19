@@ -98,24 +98,35 @@ void fill_pose_msg(geometry_msgs::PoseWithCovariance& pose,
   pose.pose.orientation.z = sin(fi/2);
 }
 
+void fill_pose_msg(geometry_msgs::Pose& pose,
+                   double x, double y, double fi)
+{
+    pose.position.x = x;
+    pose.position.y = y;
+    pose.position.z = 0;
+    pose.orientation.x = 0;
+    pose.orientation.y = 0;
+    pose.orientation.w = cos(fi/2);
+    pose.orientation.z = sin(fi/2);
+}
+
 void Slam::publish_results(const std::string& frame, const ros::Time& time)
 {
-  geometry_msgs::PoseWithCovarianceStamped pose;
+  geometry_msgs::PoseStamped pose;
 
   pose.header.frame_id = frame;
   pose.header.stamp = time;
   // публикуем сообщение с позицией робота
-  fill_pose_msg(pose.pose, X(0), X(1), X(2), P.topLeftCorner(2, 2));
+  fill_pose_msg(pose.pose, X(0), X(1), X(2));
   pose_pub.publish(pose);
 
   // публикуем сообщения с положениями маяков
   for (int i = 0; i < last_found_landmark_index; ++i) 
   {
-    geometry_msgs::PoseWithCovarianceStamped pose;
+    geometry_msgs::PoseStamped pose;
     pose.header.frame_id = frame;
     pose.header.stamp = time;
-    fill_pose_msg(pose.pose, X(ROBOT_STATE_SIZE + i * 2), X(ROBOT_STATE_SIZE + i * 2 + 1), 0,
-                  P.block<2, 2>(ROBOT_STATE_SIZE + i * 2, ROBOT_STATE_SIZE + i * 2));
+    fill_pose_msg(pose.pose, X(ROBOT_STATE_SIZE + i * 2), X(ROBOT_STATE_SIZE + i * 2 + 1), 0);
     landmark_pub[i].publish(pose);
   }
 }
@@ -179,7 +190,7 @@ void Slam::advertize_landmark_publishers()
   {
     std::stringstream stream;
     stream << landmark << i;
-    landmark_pub[i] = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>(stream.str(), 1);
+    landmark_pub[i] = nh.advertise<geometry_msgs::PoseStamped>(stream.str(), 1);
   }
 }
 
@@ -188,7 +199,7 @@ Slam::Slam():
     nh("~"),
     odo_sub(nh.subscribe("/odom", 1, &Slam::on_odo, this)),
     scan_sub(nh.subscribe("/scan", 1, &Slam::on_scan, this)),
-    pose_pub(nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("slam_pose", 1)),
+    pose_pub(nh.advertise<geometry_msgs::PoseStamped>("slam_pose", 1)),
     X(3 + 2*NUMBER_LANDMARKS),
     A(Eigen::Matrix3d::Identity()),
     P(Eigen::MatrixXd::Zero(X.size(), X.size()))
