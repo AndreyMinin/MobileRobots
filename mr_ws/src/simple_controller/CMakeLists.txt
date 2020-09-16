@@ -88,7 +88,9 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(controller_node src/controller_node.cpp
-                                src/controller.cpp)
+                                src/controller.cpp
+                                src/controller.h
+                                include/trajectory_segment.h)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
