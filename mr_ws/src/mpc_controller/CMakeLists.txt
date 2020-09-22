@@ -76,6 +76,7 @@ link_directories(${ACADO_LIBRARY_DIRS})
 
 add_executable(mpc_controller src/mpccontroller_node.cpp
                                 src/mpccontroller.cpp
+                                src/mpccontroller.h
                                 src/mpc.cpp)
 
 target_link_libraries(mpc_controller
