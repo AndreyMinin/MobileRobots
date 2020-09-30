@@ -42,7 +42,7 @@ roslaunch velocity_controller test.launch
 ```
 Запустится модуль velocity_test из пакета velocity_cntroller с параметрами из лонч файла [test.launch](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/velocity_controller/launch/test.launch) (там можно задать параметры трапеции: ускорение замедление и пр.) В текущей реализации мы увидим на графиках изменения заданной скорости и ошибки управления. МР остается на месте, так как контроллер не реализован.
 
-###Задача
+### Задача
 1. Ваша задача реадизовать и настроить контроллер управления скоростью на базе модуля velocity_controller. Код этого модуля содержится в файле [velocity_controller/src/velocity_controller.cpp](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/velocity_controller/src/velocity_controller.cpp). Код реализован в виде фукций-колбеков, котрые подписаны на необходимые ros сообщения (заданную скорость, текущую скорость, таймер). Необходимо отредактировать код, реализовав контроллер управления скоростью. Для проверки собранного модуля выполнить пункты 4,5 (саму модель можно не перезапускать)
 2. Добавим реалистичности: шум в данные одометрии. Для этого в файле запуска модели [cart_launch/launch/cart_stage.launch](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/cart_launch/launch/cart_stage.launch#L25) исправим параметр регулирующий шум в одометрии 
 ```xml
