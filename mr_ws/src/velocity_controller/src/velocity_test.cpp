@@ -12,7 +12,6 @@
 #include <algorithm>
 
 ros::Publisher test_pub;
-ros::Publisher err_pub;
 double cmd_velocity = 0;
 double max_velocity = 10;
 double acc = 1.0;
@@ -20,18 +19,21 @@ double max_test_time = 5.0;
 double acc_time = max_test_time / 2.;
 double dcc_time = acc_time;
 ros::Time start_test_time;
+bool started = false;
 
 void on_odo(const nav_msgs::Odometry& odom)
 {
   double current_velocity = odom.twist.twist.linear.x;
-  std_msgs::Float32 err;
-  err.data = cmd_velocity - current_velocity;
-  ROS_INFO_STREAM_COND(cmd_velocity > 0.1, "current velocity " << current_velocity << " err = " << err.data);
-  err_pub.publish(err);
+
 }
 
 void on_timer(const ros::TimerEvent& event) {
-  auto t = ros::Time::now();
+  const auto t = ros::Time::now();
+  if (!started) {
+    start_test_time = t;
+    started = true;
+  }
+
   auto test_time = (t - start_test_time).toSec();
 
   std_msgs::Float32 vcmd;
@@ -73,7 +75,7 @@ int main(int argc, char* argv[])
   
   auto odo_sub = nh.subscribe("odom", 1, on_odo);
   test_pub = nh.advertise<std_msgs::Float32>("velocity", 1);
-  err_pub = nh.advertise<std_msgs::Float32>("velocity_err", 1);
+
   if (nh.param("/use_sim_time", false)) {
     while(ros::ok()) {
       ros::spinOnce();

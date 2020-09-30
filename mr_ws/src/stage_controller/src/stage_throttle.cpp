@@ -9,6 +9,7 @@
 #include <std_msgs/Float32.h>
 #include <ros/ros.h>
 #include <algorithm>
+#include <random>
 
 double car_length = 1.5;
 
@@ -31,9 +32,13 @@ double kWindFriction = 0.01;
 double kBrake = 3.0;
 double kThrottle = 2.5;
 double kVelExp = 0.8;
+double velocity_noise = 0.0;
 
 ros::Publisher twist_pub;
 ros::Time last_timer_time;
+
+std::default_random_engine noise_generator;
+std::normal_distribution<double> noise_distr;
 
 void on_steering(const std_msgs::Float32& msg) {
   cmd_steering = msg.data;
@@ -76,12 +81,15 @@ void on_timer(const ros::TimerEvent& event) {
   geometry_msgs::Twist cmd;
 
   velocity = std::max(0.0, clamp(velocity  + acc_from_throttle(dt) * dt, max_velocity));
-  
+  double send_velocity = velocity;
+  if (velocity_noise != 0.0) {
+    send_velocity += noise_distr(noise_generator);
+  }
   
   steering = clamp(steering, cmd_steering, max_steering, max_steering_rate, dt);
   ROS_INFO_STREAM("v = " << velocity <<" s = " << steering);
-  cmd.linear.x = velocity;
-  cmd.angular.z = velocity * tan(steering) / car_length;
+  cmd.linear.x = send_velocity;
+  cmd.angular.z = send_velocity * tan(steering) / car_length;
   twist_pub.publish(cmd);
 }
 
@@ -94,6 +102,10 @@ int main(int argc, char* argv[])
   max_steering = nh.param("max_steering", 0.5);
   max_steering_rate = nh.param("max_steering_rate", 1.0);
   max_velocity = nh.param("max_velocity", 15);
+  velocity_noise = nh.param("velocity_noise", 0.0);
+  if (velocity_noise != 0.0) {
+    noise_distr = std::normal_distribution<double>(0.0, velocity_noise);
+  }
 
   kMass = nh.param("mass", 500);
   kFriction = nh.param("friction", 1.0);

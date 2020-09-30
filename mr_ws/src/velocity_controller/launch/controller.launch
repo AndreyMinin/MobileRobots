@@ -1,7 +1,14 @@
 <launch>
+<arg name="rqt_persp" default="$(find velocity_controller)/launch/vel_error.perspective"/>
+
 <node pkg="velocity_controller" name="throttle_controller" type="velocity_controller" output="screen">
     <remap from="/throttle_controller/odom" to="/robot/odom"/>
     <remap from="/throttle_controller/velocity" to="/robot/velocity"/>
     <remap from="/throttle_controller/throttle" to="/robot/throttle"/>
 </node>
+
+<!-- start rqt via script -->
+ <node name="rqt" pkg="simple_controller" type="start_rqt" args="--perspective-file $(arg rqt_persp)" output="log" if="$(eval rqt_persp != '')">
+ </node>
+
 </launch>

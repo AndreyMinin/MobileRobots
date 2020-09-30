@@ -5,6 +5,7 @@
 #include <algorithm>
 
 ros::Publisher throttle_pub;
+ros::Publisher err_pub;
 
 double cmd_velocity = 0;
 double current_velocity = 0;
@@ -12,7 +13,10 @@ ros::Time last_timer_time;
 
 void on_velocity(const std_msgs::Float32& msg) {
   cmd_velocity = msg.data;
-  ROS_INFO_STREAM("cmd velocity " << current_velocity << " err = " << cmd_velocity - current_velocity);
+  std_msgs::Float32 err;
+  err.data = cmd_velocity - current_velocity;
+  ROS_INFO_STREAM_COND(cmd_velocity > 0.1, "current velocity " << current_velocity << " err = " << err.data);
+  err_pub.publish(err);
 }
 
 void on_odo(const nav_msgs::Odometry& odom)
@@ -39,6 +43,7 @@ int main(int argc, char* argv[])
   throttle_pub = nh.advertise<std_msgs::Float32>("throttle", 1);
   auto odo_sub = nh.subscribe("odom", 1, on_odo);
   auto cmd_sub = nh.subscribe("velocity", 1, on_velocity);
+  err_pub = nh.advertise<std_msgs::Float32>("velocity_err", 1);
   if (nh.param("/use_sim_time", false)) {
     while(ros::ok()) {
       ros::spinOnce();

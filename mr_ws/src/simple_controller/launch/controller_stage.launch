@@ -18,7 +18,7 @@
     <!-- node name="vel_node" pkg="rostopic" type="rostopic" args="pub /robot/velocity std_msgs/Float32  4.0 -r10">
     </node-->
    <!-- start rqt via script -->
-    <node name="rqt" pkg="simple_controller" type="start_rqt" args="--perspective-file $(arg rqt_persp)" output="log">
+    <node name="rqt" pkg="simple_controller" type="start_rqt" args="--perspective-file $(arg rqt_persp)" output="log" if="$(eval rqt_persp != '')">
     </node>
 
 </launch>

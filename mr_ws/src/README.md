@@ -96,6 +96,7 @@ model/scan_cart.sdf - робот с плоским дальномером и к�
 
 ## Практические задания курса
 1. [контроллер управления движением по траектории](https://github.com/AndreyMinin/MobileRobots/tree/master/mr_ws/src/simple_controller)
+2. [Контроллер управления скоростью](https://github.com/AndreyMinin/MobileRobots/tree/master/mr_ws/src/velocity_controller)
 
 
 

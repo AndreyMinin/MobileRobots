@@ -1,8 +1,6 @@
 <launch>
-
 <include file="$(find simple_controller)/launch/controller_stage.launch">
-	<arg name="control_velocity" value="false"/>
-    <arg name="rqt_persp" default="$(find velocity_controller)/launch/vel_error.perspective"/>
+   <arg name="control_velocity" value="false"/>
+   <arg name="rqt_persp" value=""/>
 </include>
-
 </launch>
