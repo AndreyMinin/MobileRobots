@@ -114,8 +114,8 @@ double MPCController::polyeval(double x) {
 void MPCController::update_robot_pose(double dt)
 {
 //  ROS_DEBUG_STREAM("update_robot_pose "<<dt<<" v = "<<current_linear_velocity );
-  robot_x += current_linear_velocity * dt * sin(robot_theta);
-  robot_y += current_linear_velocity * dt * cos(robot_theta);
+  robot_x += current_linear_velocity * dt * cos(robot_theta);
+  robot_y += current_linear_velocity * dt * sin(robot_theta);
   robot_theta = angles::normalize_angle(robot_theta + current_angular_velocity * dt);
   robot_time += ros::Duration(dt);
   robot2world.setOrigin(tf::Vector3(robot_x, robot_y, 0));
@@ -142,7 +142,8 @@ void MPCController::on_timer(const ros::TimerEvent& event)
   apply_control();
 
   //  ROS_INFO_STREAM("on_timer");
-  update_robot_pose((ros::Time::now() - robot_time).toSec() + control_dt );
+  // calculate robot pose to next cycle
+  update_robot_pose((event.current_expected - robot_time).toSec() + control_dt );
   update_trajectory_segment();
 
   update_control_points();
@@ -152,9 +153,9 @@ void MPCController::on_timer(const ros::TimerEvent& event)
   double error = control_coefs[0];
   ROS_DEBUG_STREAM("error from coef[0] = "<<error);
 
-  ros::Time start_solve = ros::Time::now();
+  const auto start_solve = ros::WallTime::now();
   mpc.solve(current_linear_velocity, cmd_steer_angle, control_coefs, cmd_steer_rate, cmd_acc, mpc_x, mpc_y);
-  double solve_time = (ros::Time::now() - start_solve).toSec();
+  double solve_time = (ros::WallTime::now() - start_solve).toSec();
   ROS_DEBUG_STREAM("solve time = "<<solve_time);
   ROS_ERROR_STREAM_COND(solve_time > 0.08, "Solve time too big "<<solve_time);
   publish_trajectory();
