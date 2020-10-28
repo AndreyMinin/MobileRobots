@@ -165,7 +165,7 @@ void Planner::calculate_path()
 
   // Здесь необходимо продолжить код для поиска пути
   std::set<MapIndex, CompareSearchNodes> queue(CompareSearchNodes(*this));
-  MapIndex start_index = pointToIndex(start_pose_.position.x, start_pose_.position.y);
+  MapIndex start_index = point_index(start_pose_.position.x, start_pose_.position.y);
   SearchNode& start = map_value(search_map_, start_index.i, start_index.j);
   start.g = 0;
   start.h = heruistic(start_index.i, start_index.j);
@@ -178,7 +178,7 @@ void Planner::calculate_path()
   }
   queue.insert(start_index);
 
-  MapIndex target_index = pointToIndex(target_pose_.position.x, target_pose_.position.y);
+  MapIndex target_index = point_index(target_pose_.position.x, target_pose_.position.y);
   bool found = false;
   while (!queue.empty()) {
   	auto node_index_iter = queue.begin();

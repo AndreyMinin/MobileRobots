@@ -64,7 +64,7 @@ private:
     ROS_ASSERT(index < data.size() && index >= 0);
     return data[index];
   }
-  MapIndex pointToIndex(double x, double y) {
+  MapIndex point_index(double x, double y) {
     return {
      static_cast<int>(floor((x - map_.info.origin.position.x)/ map_.info.resolution)),
      static_cast<int>(floor((y - map_.info.origin.position.y)/ map_.info.resolution))
