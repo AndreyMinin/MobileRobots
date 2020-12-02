@@ -54,7 +54,7 @@ void Matcher::detect_features(const sensor_msgs::LaserScan& scan)
 }
 
 void Matcher::predict_features_poses() {
-  // считаем что робот продолжит двигаться так же как на предыдущем шаге, 
+  // считаем, что робот продолжит двигаться так же как на предыдущем шаге,
   // тогда положение скана будет определяться следующим трансформом
   const Eigen::Isometry2d interpolated_transform = incremental_transform * transform;
   // переводим точки скана в предсказанное положение
@@ -167,7 +167,7 @@ void Matcher::publish_transform(const std_msgs::Header& header)
   odo_pub.publish(odo);
   
   // публикуем трансформ от скана до карты, 
-  // не наоборот, так как дерево tf - однонаправлен5ное
+  // не наоборот, так как дерево tf - однонаправленное и в нем уже есть основание - система odom
   tf::Transform tf_transform;
   Eigen::Isometry2d inverted_transform = transform.inverse();
   tf_transform.setOrigin( tf::Vector3(inverted_transform.translation().x(), 
