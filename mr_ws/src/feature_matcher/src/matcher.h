@@ -41,9 +41,9 @@ private:
   ros::Publisher odo_pub = nh.advertise<nav_msgs::Odometry>("odo", 1 , false);
   double feature_rad = nh.param<double>("feature_radius", 0.55);
   const std::string map_frame = nh.param<std::string>("map_frame", "map");
-  // features from base scan набор опорных особенных точек 
+  // features from base scan набор опорных особенных точек в СК карты
   std::vector<Eigen::Vector2d> base_features;
-  // features from new scan набор особенных точек из нового скана
+  // features from new scan набор особенных точек из нового скана в СК лазерного дальномера
   std::vector<Eigen::Vector2d> new_features;
   // features from new scan transfromed to base scan according to interpolation
   // набор особенных точек нового скана переведенных в СК карты
@@ -57,7 +57,7 @@ private:
   // преобразование переводящее текущий скан в карту, обновляется в результате каждого шага
   Eigen::Isometry2d transform = Eigen::Isometry2d::Identity();
   // transform from current scan to previous
-  // инкрементальное преобразование за последний шаг
+  // инкрементальное преобразование за последний шаг в СК карты
   Eigen::Isometry2d incremental_transform = Eigen::Isometry2d::Identity();
 
   tf::TransformBroadcaster br;

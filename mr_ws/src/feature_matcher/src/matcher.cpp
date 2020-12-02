@@ -49,8 +49,8 @@ void Matcher::detect_features(const sensor_msgs::LaserScan& scan)
 {
   new_features.clear();
   // TODO Здесь должен быть код для пределения особенные точек скана
-  // ищем начальный и конечный индексы лучей, падающих на одно препятствие
-  // и вызываем adD_feature
+  // В цикле по лучам ищем начальный и конечный индексы лучей, падающих на одно препятствие
+  // и вызываем add_feature
 }
 
 void Matcher::predict_features_poses() {
@@ -64,7 +64,7 @@ void Matcher::predict_features_poses() {
 
 void Matcher::find_feature_pairs() {
   feature_pair_indices.clear();
-  // для каждой точки базовой изем ближайшую новую из предсказанных
+  // для каждой точки базовой ищем ближайшую новую из предсказанных
   for (std::size_t base_index = 0; base_index < base_features.size(); ++base_index) {
   	std::size_t nearest_index = 0;
   	double nearest_distance = 1000000;
@@ -167,7 +167,7 @@ void Matcher::publish_transform(const std_msgs::Header& header)
   odo_pub.publish(odo);
   
   // публикуем трансформ от скана до карты, 
-  // не наоборот, так как дерево tf - однонаправленное
+  // не наоборот, так как дерево tf - однонаправлен5ное
   tf::Transform tf_transform;
   Eigen::Isometry2d inverted_transform = transform.inverse();
   tf_transform.setOrigin( tf::Vector3(inverted_transform.translation().x(), 
