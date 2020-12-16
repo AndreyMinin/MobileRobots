@@ -106,7 +106,7 @@ roslaunch simple_controller controller_stage.launch
 4. [Планирование траектории](https://github.com/AndreyMinin/MobileRobots/tree/master/mr_ws/src/simple_planner)
 5. [Построение карты](https://github.com/AndreyMinin/MobileRobots/tree/master/mr_ws/src/simple_map)
 6. [Локализация по дальномеру](https://github.com/AndreyMinin/MobileRobots/tree/master/mr_ws/src/feature_matcher)
-
+7. [EKF SLAM](https://github.com/AndreyMinin/MobileRobots/tree/master/mr_ws/src/barrel_slam)
 
 
 

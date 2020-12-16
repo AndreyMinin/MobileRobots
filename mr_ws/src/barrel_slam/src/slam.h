@@ -20,7 +20,6 @@ private:
   ros::Publisher pose_pub;
   // публикатор положений маяков
   ros::Publisher landmark_pub[NUMBER_LANDMARKS];
-  ros::Timer timer;
   void on_odo(const nav_msgs::Odometry& odom);
   void on_scan(const sensor_msgs::LaserScan& scan);
   void publish_results(const std::string& frame, const ros::Time& time);
@@ -56,7 +55,7 @@ private:
 
   ros::Time last_time = ros::Time::now();
 
-  std::size_t last_found_landmark_index = 0;
+  std::size_t landmarks_found_quantity = 0;
 
   std::vector<Eigen::Vector2d> new_landmarks;
 

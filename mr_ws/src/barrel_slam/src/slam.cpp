@@ -34,15 +34,19 @@ int Slam::associate_measuriment(const Eigen::Vector2d& landmark_measuriment)
 {
   double nearest_distance = 1e10;
   int nearest_index = -1;
-  for (std::size_t i = 0; i < NUMBER_LANDMARKS; ++i) {
-    double distance = (landmark_measuriment - X.segment(i*2, 2)).norm();
+  // преобразование от СК карты к СК робота (дальномера)
+  Eigen::Isometry2d robot_to_map = Eigen::Translation2d(X.segment(0, 2))
+                                 * Eigen::Rotation2Dd(X(3));
+  for (std::size_t i = 0; i < landmarks_found_quantity; ++i) {
+    double distance = (robot_to_map * landmark_measuriment - X.segment(ROBOT_STATE_SIZE + i*2, 2)).norm();
     if (distance < nearest_distance) {
       nearest_index = i;
+      nearest_distance = distance;
     }
   }
   // naive association
   const double kAssocThreshold = 5.0;
-  if (nearest_index < kAssocThreshold)
+  if (nearest_index >= 0 && nearest_distance < kAssocThreshold)
   {
     return nearest_index;
   }
@@ -51,11 +55,11 @@ int Slam::associate_measuriment(const Eigen::Vector2d& landmark_measuriment)
 
 int Slam::add_landmark_to_state(const Eigen::Vector2d& landmark_measuriment)
 {
-  ++last_found_landmark_index;
+  ++landmarks_found_quantity;
   // TODO init landmark in state
   // Здесь должен быть код по инициализации части вектора состояния, соответствующей 
   // маяку с индексом last_found_landmark_index
-  return last_found_landmark_index;
+  return landmarks_found_quantity;
 }
 
 void Slam::correct(int index, const Eigen::Vector2d& landmark_measuriment)
@@ -74,7 +78,11 @@ void Slam::on_scan(const sensor_msgs::LaserScan& scan)
     if (landmark_index >= 0) {
       correct(landmark_index, new_landmarks[i]);
     } else {
-      add_landmark_to_state(new_landmarks[i]);
+        if (landmarks_found_quantity < NUMBER_LANDMARKS) {
+          add_landmark_to_state(new_landmarks[i]);
+        } else {
+            ROS_ERROR_STREAM("can not associate new landmark with any existing one");
+        }
     }
   }
 
@@ -121,7 +129,7 @@ void Slam::publish_results(const std::string& frame, const ros::Time& time)
   pose_pub.publish(pose);
 
   // публикуем сообщения с положениями маяков
-  for (int i = 0; i < last_found_landmark_index; ++i) 
+  for (int i = 0; i < landmarks_found_quantity; ++i)
   {
     geometry_msgs::PoseStamped pose;
     pose.header.frame_id = frame;
@@ -200,13 +208,13 @@ Slam::Slam():
     odo_sub(nh.subscribe("/odom", 1, &Slam::on_odo, this)),
     scan_sub(nh.subscribe("/scan", 1, &Slam::on_scan, this)),
     pose_pub(nh.advertise<geometry_msgs::PoseStamped>("slam_pose", 1)),
-    X(3 + 2*NUMBER_LANDMARKS),
+    X(ROBOT_STATE_SIZE + 2*NUMBER_LANDMARKS),
     A(Eigen::Matrix3d::Identity()),
     P(Eigen::MatrixXd::Zero(X.size(), X.size()))
 {
   // начальный вектор состояния заполняем нулями
   X = Eigen::VectorXd::Zero(X.size());
-  // начальное значение ковариации для маяков
+  // записываем огромное значение начальной ковариации для маяков
   P.bottomRightCorner(NUMBER_LANDMARKS * 2, NUMBER_LANDMARKS * 2) =
       HUGE_COVARIANCE * Eigen::MatrixXd::Identity(NUMBER_LANDMARKS * 2, NUMBER_LANDMARKS * 2);
 
