@@ -9,10 +9,10 @@
 
 #include <std_msgs/Float32.h>
 #include <sensor_msgs/PointCloud.h>
+#include <tf/transform_datatypes.h>
 
 namespace simple_controller
 {
-
 
 template <class T>
 T clip(T val, T max)
@@ -22,28 +22,6 @@ T clip(T val, T max)
   if ( val < -max)
     return -max;
   return val;
-}
-
-void Controller::update_trajectory_segment()
-{
-  current_segment_length = (*current_segment)->get_point_length(robot_x, robot_y);
-
-  while( current_segment_length < 0.0 )
-  {
-    if (current_segment == trajectory.begin())
-      current_segment = trajectory.end();
-
-    --current_segment;
-    current_segment_length = (*current_segment)->get_point_length(robot_x, robot_y);
-  }
-  while (current_segment_length > (*current_segment)->get_length())
-  {
-    ++current_segment;
-    if (current_segment == trajectory.end())
-      current_segment = trajectory.begin();
-    current_segment_length = (*current_segment)->get_point_length(robot_x, robot_y);
-  }
-//  ROS_DEBUG_STREAM("current segment length "<<current_segment_length);
 }
 
 void Controller::update_robot_pose(double dt)
@@ -56,6 +34,43 @@ void Controller::update_robot_pose(double dt)
 }
 
 
+void Controller::on_path(const nav_msgs::Path& path) {
+  ROS_INFO_STREAM("Got path " << path.poses.size());
+  this->path = path;
+  nearest_point_index = 0;
+}
+
+// search a pose in the pat nearest to the robot, assume path may be cyclic
+std::size_t Controller::get_nearest_path_pose_index(int start_index,
+                                                    std::size_t search_len)
+{
+  double nearest_distance = 1e10;
+  std::size_t index = start_index;
+  std::size_t nearest_index;
+  geometry_msgs::Pose nearest_pose;
+  for (int index = start_index; index < start_index + static_cast<int>(search_len); ++index) {
+    std::size_t real_index;
+    if (index >= 0 && index < static_cast<int>(path.poses.size())) {
+        real_index = static_cast<std::size_t>(index);
+    }
+    if (index < 0) {
+        real_index = (static_cast<int>(path.poses.size()) + index);
+    }
+    if (index >= static_cast<int>(path.poses.size())) {
+        real_index = static_cast<std::size_t>(index) - path.poses.size();
+    }
+
+    const auto& path_point = path.poses[real_index].pose.position;
+    double dx = robot_x - path_point.x;
+    double dy = robot_y - path_point.y;
+    double distance_sqr = dx * dx + dy * dy;
+    if (distance_sqr < nearest_distance) {
+        nearest_distance = distance_sqr;
+        nearest_index = real_index;
+    }
+  }
+  return nearest_index;
+}
 
 void Controller::on_timer(const ros::TimerEvent& event)
 {
@@ -63,11 +78,15 @@ void Controller::on_timer(const ros::TimerEvent& event)
     return;
   }
   update_robot_pose((ros::Time::now() - robot_time).toSec() );
-  update_trajectory_segment();
 
-//  double error = cross_track_error();
-  double error = -(*current_segment)->get_point_distance(robot_x, robot_y);
+  nearest_point_index = get_nearest_path_pose_index(nearest_point_index - 10, 20);
 
+  const auto& nearest_pose = path.poses[nearest_point_index].pose;
+  const auto& nearest_pose_angle = tf::getYaw(nearest_pose.orientation);
+  double dx = robot_x - nearest_pose.position.x;
+  double dy = robot_y - nearest_pose.position.y;
+  // error is negative difference by y axe in the axis of the nereset pose
+  double error = -(-dx * sin(nearest_pose_angle) + dy * cos(nearest_pose_angle));
   double diff_err = error - last_error;
   last_error = error;
   if ( fabs(error) < max_antiwindup_error )
@@ -75,12 +94,8 @@ void Controller::on_timer(const ros::TimerEvent& event)
   else
     error_integral = 0.0;
 
-  //feed forward from current curvature
-  double feed_forward = (*current_segment)->get_curvature() * current_linear_velocity;
-//  ROS_DEBUG_STREAM("feed forward "<<feed_forward);
-  //Necessary angular velocity
-  double angular_cmd = feed_forward
-                      + p_factor * error
+  //Desired angular velocity
+  double angular_cmd =  p_factor * error
                       + d_factor * diff_err
                       + i_factor * error_integral;
   //curvature for calculated angular velocity and for current linear velocity
@@ -108,11 +123,6 @@ void Controller::on_pose(const nav_msgs::OdometryConstPtr& odom)
 
   world_frame_id = odom->header.frame_id;
   robot_time = odom->header.stamp;
-
-//  current_velocity = odom->twist.twist.linear.x;
-//  ROS_DEBUG_STREAM("x = "<<robot_x<<" "<<" y = "<<robot_y<<" "<<robot_theta);
-
-//  ROS_DEBUG_STREAM("truth vel = "<<odom->twist.twist.linear.x);
 }
 
 void Controller::on_odo(const nav_msgs::OdometryConstPtr& odom)
@@ -155,71 +165,10 @@ double Controller::cross_track_error()
   return error;
 }
 
-void Controller::get_segment(std::list<TrajPtr>::iterator&  traj_it, double& len)
-{
-  traj_it = trajectory.end();
-
-  if (robot_y < radius )
-  {
-    if ( robot_x >= 0 )
-    {
-      traj_it = trajectory.begin();
-
-    }
-  }
-}
-
-void add_point(sensor_msgs::PointCloud& msg, const tf::Vector3& point)
-{
-  geometry_msgs::Point32 p;
-  p.x = point.x();
-  p.y = point.y();
-  p.z = point.z();
-  msg.points.push_back(p);
-}
-
 void Controller::publish_trajectory()
 {
-  //prepare pointcloud message
-  sensor_msgs::PointCloud msg;
-  msg.header.frame_id = world_frame_id;
-  msg.header.stamp = robot_time;
-  static int seq(0);
-  msg.header.seq = seq++;
-
-  int trajectory_points_quantity = traj_length / traj_dl  + 1;
-  int points_left = trajectory_points_quantity;
-  msg.points.reserve( trajectory_points_quantity );
-  double publish_len = 0;
-  Trajectory::iterator it = current_segment;
-  double start_segment_length = current_segment_length;
-//  ROS_DEBUG_STREAM("start from "<<start_segment_length);
-
-  while ( points_left )
-  {
-    double segment_length = (*it)->get_length();
-    //add points from the segment
-    int segment_points_quantity = std::min<int>( points_left, floor((segment_length - start_segment_length)/traj_dl) );
-//    ROS_DEBUG_STREAM("segment points "<<segment_points_quantity);
-    for ( int i = 0; i<=segment_points_quantity; ++i)
-    {
-      add_point(msg, (*it)->get_point(start_segment_length + i * traj_dl) );
-    }
-    points_left -= segment_points_quantity;
-    //switch to next segment
-    if (points_left)
-    {
-      //start point for next segment
-      start_segment_length += (segment_points_quantity + 1)* traj_dl - segment_length;
-      //ROS_DEBUG_STREAM("start segment length = "<<start_segment_length);
-      ++it;
-      if ( it == trajectory.end() )
-        it = trajectory.begin();
-    }
-
-  }
-//  ROS_DEBUG_STREAM("publish trajectory");
-  traj_pub.publish(msg);
+ //  ROS_DEBUG_STREAM("publish trajectory");
+  path_pub.publish(path);
 }
 
 void Controller::reset()
@@ -236,6 +185,37 @@ void Controller::reset(double p, double d, double i)
   i_factor = i;
 }
 
+nav_msgs::Path Controller::create_path() const {
+  //prepare path message from trajectory
+  nav_msgs::Path path;
+  path.header.frame_id = "odom";
+  path.header.stamp = robot_time;
+  auto segment_it = trajectory.begin();
+  double previous_segment_left = 0.0;
+  std::size_t points_added = 0;
+  double point_length = 0.0;
+
+  while (segment_it != trajectory.end()) {
+    const auto segment = *segment_it;
+    double segment_length = segment->get_length();
+    //add  points from the segment
+    while (point_length <= segment_length) {
+      const auto point = segment->get_point(point_length);
+      const auto angle = segment->get_orientation(point_length);
+      geometry_msgs::PoseStamped pose;
+      pose.header.frame_id = "odom";
+      pose.pose.position.x = point.x();
+      pose.pose.position.y = point.y();
+      pose.pose.orientation = tf::createQuaternionMsgFromYaw(angle);
+      path.poses.push_back(pose);
+      point_length += traj_dl;
+      points_added++;
+    }
+    point_length -= segment_length;
+    ++segment_it;
+  }
+  return path;
+}
 
 /*!
  * \brief constructor
@@ -258,17 +238,18 @@ Controller::Controller(const std::string& ns):
     max_antiwindup_error( nh.param("max_antiwindup_error", 0.5) ),
     error_integral(0.0),
     last_error(0.0),
-    radius( nh.param("radius", 10.0) ),
-    cy( nh.param("cy", 2*radius) ), //default circle is in center (0,radius)
-    max_curvature( nh.param("max_curvature", 0.2 ) ),
-    traj_dl( nh.param("traj_dl", 0.2) ),
-    traj_length( nh.param("traj_length", 5.0) ),
+    radius(nh.param("radius", 10.0)),
+    cy(nh.param("cy", 2*radius)), //default circle is in center (0,radius)
+    max_curvature(nh.param("max_curvature", 0.2 )),
+    traj_dl(nh.param("traj_dl", 0.2)),
+    traj_length(nh.param("traj_length", 5.0)),
     pose_sub(nh.subscribe("ground_truth", 1, &Controller::on_pose, this)),
+    odo_sub(nh.subscribe("odom", 1, &Controller::on_odo, this)),
+    path_sub(nh.subscribe("path", 1, &Controller::on_path, this)),
     timer( nh.createTimer( ros::Duration(nh.param("timer_period", 0.1)), &Controller::on_timer, this ) ),
-    err_pub( nh.advertise<std_msgs::Float32>("error", 10) ),
-    steer_pub( nh.advertise<std_msgs::Float32>("/steering", 10) ),
-    odo_sub( nh.subscribe("odom", 1, &Controller::on_odo, this)),
-    traj_pub( nh.advertise<sensor_msgs::PointCloud>("trajectory", 1) )
+    err_pub(nh.advertise<std_msgs::Float32>("error", 10) ),
+    steer_pub(nh.advertise<std_msgs::Float32>("/steering", 10)),
+    path_pub(nh.advertise<nav_msgs::Path>("controller_path", 1))
 {
   //counter clock
   trajectory.emplace_back( std::make_shared<trajectory::CircularSegment>( 1.0 / radius,    0,       0,    1.0,   0,   M_PI/2*radius) );
@@ -288,6 +269,8 @@ Controller::Controller(const std::string& ns):
 
 
   current_segment = trajectory.begin();
+  const auto trajectory_path = create_path();
+  on_path(trajectory_path);
 }
 
 

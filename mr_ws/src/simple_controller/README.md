@@ -7,11 +7,11 @@
 
 В этой задаче мы не используем данные датчиков, только одометрию и данные о положении робота, которые приходят из симулятора
 
-Управение роботом в этой задаче сводится к управлению поворотом переднего колеса велосипедной модели (топик /steering куда можно отправить желаемый угол поворота руля в рад) и управлению скоростью (топик /velocity куда можно отправить желаемую скорость в м/сек). 
+Управение роботом в этой задаче сводится к управлению поворотом переднего колеса велосипедной модели (топик `/steering` куда можно отправить желаемый угол поворота руля в рад) и управлению скоростью (топик `/velocity` куда можно отправить желаемую скорость в м/сек). 
 
-В случае Gazebo за передачу команд управления в модель отвечает vehicle_ros_plugin, а в случае stage команды превращает в управление моделью stage_controller. И в том и в другом случае моделируются ограничения на параметр управления и скорость его изменения (линейное ускорение и скорость вращения рулевого колеса соответственно). То есть если задать угол поворота руля, то он начнет менятся от текущего к заданному с фиксированной скоростью (задается в лонч файле).
+В случае Gazebo за передачу команд управления в модель отвечает vehicle_ros_plugin, а в случае stage команды превращает в управление моделью stage_controller. И в том и в другом случае моделируются ограничения на параметр управления и скорость его изменения (линейное ускорение и скорость вращения рулевого колеса соответственно). То есть если задать угол поворота руля, то он начнет менятся от текущего к заданному с фиксированной скоростью (задается в [лонч файле]() для модели stage ).
 
-Модуль simple_controller реализует управление вдоль заданной траектории, который нужно модернизировать.
+Модуль simple_controller, который нужно доработать, реализует управление вдоль заданной траектории.
 Запуск модуля управления с моделью осуществляется с помощью лонч  файла controller_stage.launch для stage
 ```bash
 roslaunch simple_controller controller_stage.launch
@@ -36,7 +36,9 @@ simple_controller реализован в виде класса [Controller](htt
 - траекторию движения в виде облака точек для визуализации в rviz в функции [publish_trajectory](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/src/controller.cpp#L181)
 
 ### Траектория движения
-Траектория движения задается в виде набора сегментов с постоянной кривизной: прямых и дуг окружностей. 
+В этой задаче траектория движения задается локально в виде набора сегментов с постоянной кривизной: прямых и дуг окружностей. 
+<details>
+<summary>Подробнее ...</summary>
 Программно каждый сегмент представлен в виде объектов класса [CircularSegment](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/include/trajectory_segment.h#L39) либо [LinearSegment](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/include/trajectory_segment.h#L103), являющихся наследниками класса [TrajectorySegment](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/include/trajectory_segment.h#L23), что позволяет работать с разными сегментами единым образом.
 Каждый сегмент задается некоторой начальной точку, заданной кривизной, длиной и направлением (определяется ориентацией в начальной точке)
 
@@ -47,18 +49,21 @@ simple_controller реализован в виде класса [Controller](htt
 - get_point_length(x, y) - вернет длину сегмента до точки, ближайшей к заданной
 - get_point_distance(x,y) - вернет расстояние от заданной точки до ближайшей точки сегмента с учетом направления
 
-Траектория задается как [массив(std::list) trajectory из нескольких сегментов](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/src/controller.cpp#L274) в конструкторе контроллера. Траектория образует замкнутый овал.
+Траектория задается как [массив(std::list) trajectory из нескольких сегментов](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/src/controller.cpp#L274) в конструкторе контроллера. 
+</details>
+Траектория образует замкнутый овал.
+В конструкторе траектория пересчитывается в сообщение [nav_msgs::Path](http://docs.ros.org/en/noetic/api/nav_msgs/html/msg/Path.html) - стандартное сообщение ROS для задания траектории движения. Также траектория может быть задана за счет соответствующего сообщения, переданного в топик `path`
 
 ### Текущее устройство контроллера
-Модуль управления движением вдоль траектории реализован в виде ПИД регулятора, входом которого является расстояние до ближайшей точки траектории, а выходом желаемый угол управления
+Модуль управления движением вдоль траектории реализован в виде ПИД регулятора, входом которого (ошибкой) является расстояние до ближайшей точки траектории, а выходом желаемый угол управления
 Начальное положение МР соответствует начальной точке первого сегмента.
-Далее в [таймере](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/src/controller.cpp#L60) контроллера
--[update_robot_pose](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/src/controller.cpp#L274) - обновляется положение МР с учетом полученных данных (последнее положение + скорость * dt)
-- [update_trajectory_segment](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/src/controller.cpp#L66)  - обновляем указатель на сегмент траектории, который является ближайшим к положению МР. То есть берем текущий ближайший сегмент, вычисляем с помощью get_point_length длину до ближайшей точки сегмента, если она отрицательная - [надо взять предыдущий сегмент](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/src/controller.cpp#L31), если она больше длины текущего сегмента - надо [взять следующий](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/src/controller.cpp#L39) 
-- вычисляем ошибку - [расстояние до ближайшего сегмента](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/src/controller.cpp#L69)
+Далее в [таймере](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/src/controller.cpp#L75) контроллера
+-[update_robot_pose](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/src/controller.cpp#L27) - обновляется положение МР с учетом полученных данных (последнее положение + скорость * dt)
+- [get_nearest_path_pose_index](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/src/controller.cpp#L44)  - обновляем индекс ближайшей точки траектории к положению МР. 
+- вычисляем ошибку - [расстояние до траектории в координатах ближайшей точки](https://github.com/AndreyMinin/MobileRobots/blob/master/mr_ws/src/simple_controller/src/controller.cpp#L89) Учитываем знак.
 - считаем регулятор угловой скорсти
 - пересчитываем угловую скорость в кривизну 
-- отправляем кривизну в /stering (здесь небольшое несоответствие, но на самом деле речь просто о коэффициенте - он переходит в коэффициенты регулятора)
+- отправляем кривизну в `/stering` (здесь небольшое несоответствие, но на самом деле речь просто о коэффициенте - он переходит в коэффициенты регулятора)
 - публикуем траекторию
 - публикуем текущую ошибку
 

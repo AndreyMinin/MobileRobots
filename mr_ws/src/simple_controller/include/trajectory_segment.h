@@ -29,6 +29,8 @@ public:
   virtual double get_curvature() const = 0;
   /// \ returns point of trajectory for the given length
   virtual tf::Vector3 get_point(double point_len) const = 0;
+  /// \ returns flat orientation
+  virtual double get_orientation(double point_len) const = 0;
   /// \ returns length of nearest trajectory point for the given point
   virtual double get_point_length(double x, double y) const = 0;
   /// \ returns distance to nearest trajectory point w r t direction (normal error)
@@ -66,6 +68,12 @@ public:
     tf::Vector3 center = x0 + toCenter/curvature;
     double angle = start_angle + point_len * curvature;
     return center + tf::Vector3(cos(angle), sin(angle), 0)/fabs(curvature);
+  }
+
+  double get_orientation(double point_len) const
+  {
+    return start_angle + point_len * curvature +
+        ((curvature > 0.0) ? M_PI/2 : -M_PI/2);
   }
 
   /// \ returns length of trajectory for given point
@@ -116,6 +124,9 @@ public:
   tf::Vector3 get_point(double point_len) const
   {
     return x0 + point_len * v;
+  }
+  double get_orientation(double point_len) const {
+    return atan2(v.y(), v.x());
   }
   /// \ returns length of trajectory for given point
   double get_point_length(double x, double y) const

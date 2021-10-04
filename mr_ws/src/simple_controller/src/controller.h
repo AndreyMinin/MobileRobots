@@ -11,6 +11,7 @@
 
 #include <ros/ros.h>
 #include <nav_msgs/Odometry.h>
+#include <nav_msgs/Path.h>
 #include <list>
 #include <memory>
 
@@ -66,6 +67,9 @@ protected:
   /// \ container of trajectory segments
   std::list<TrajPtr> trajectory;
 
+  nav_msgs::Path path;
+  std::size_t nearest_point_index;
+
   /// \ current segment
   std::list<TrajPtr>::iterator current_segment;
   /// \ length of the current segment at the current point
@@ -73,23 +77,22 @@ protected:
 
   ros::Subscriber pose_sub;
   ros::Subscriber odo_sub;
+  ros::Subscriber path_sub;
   ros::Timer timer;
   ros::Publisher err_pub;
   ros::Publisher steer_pub;
-  ros::Publisher traj_pub;
+  ros::Publisher path_pub;
   /// \ frame_id for coordinates of controller
   std::string world_frame_id;
 
   void on_timer(const ros::TimerEvent& event);
   void on_pose(const nav_msgs::OdometryConstPtr& odom);
+  void on_path(const nav_msgs::Path& path);
   /*
    *@brief calculates feedback error for trajectory
    *@return feedback error
    */
   double cross_track_error();
-
-  /// \ returns iterator to segment and current length  of trajectory belonging to current position
-  void get_segment(std::list<TrajPtr>::iterator& traj_it, double& len);
 
   /// \ update robot pose to current time based on last pose and velocities
   void update_robot_pose(double dt);
@@ -98,8 +101,10 @@ protected:
    */
   void publish_trajectory();
   void on_odo(const nav_msgs::OdometryConstPtr& odom);
-  void update_trajectory_segment();
   void publish_error(double error);
+  nav_msgs::Path create_path() const;
+  std::size_t get_nearest_path_pose_index(int start_index,
+                                          std::size_t search_len);
 
 public:
   double get_p_factor(){ return p_factor; }
