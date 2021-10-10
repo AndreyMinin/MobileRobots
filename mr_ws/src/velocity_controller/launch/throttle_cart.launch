@@ -1,6 +1,8 @@
 <launch>
+<arg name="noise" default="0.0"/>
 <include file="$(find simple_controller)/launch/controller_stage.launch">
    <arg name="control_velocity" value="false"/>
    <arg name="rqt_persp" value=""/>
+   <arg name="velocity_noise" value="$(arg noise)"/>
 </include>
 </launch>

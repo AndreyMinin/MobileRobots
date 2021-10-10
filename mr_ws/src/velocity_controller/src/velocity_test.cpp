@@ -12,7 +12,7 @@
 #include <algorithm>
 
 ros::Publisher test_pub;
-double cmd_velocity = 0;
+double desired_velocity = 0;
 double max_velocity = 10;
 double acc = 1.0;
 double max_test_time = 5.0;
@@ -38,20 +38,20 @@ void on_timer(const ros::TimerEvent& event) {
 
   std_msgs::Float32 vcmd;
   if (test_time >= max_test_time) {
-    cmd_velocity = 0;
+    desired_velocity = 0;
   } else {
     if (test_time <= acc_time) {
-      cmd_velocity = std::min(max_velocity, test_time * acc);
+      desired_velocity = std::min(max_velocity, test_time * acc);
     } else {
       if (test_time >= dcc_time) {
-        cmd_velocity = std::max(0.0, max_velocity - acc * (test_time - dcc_time));
+        desired_velocity = std::max(0.0, max_velocity - acc * (test_time - dcc_time));
       } else {
-        cmd_velocity = max_velocity;
+        desired_velocity = max_velocity;
       }
     }
   }
-  ROS_INFO_STREAM_COND(cmd_velocity > 0.01, "test_time = " << test_time << " test vel = " << cmd_velocity);
-  vcmd.data = cmd_velocity;
+  ROS_INFO_STREAM_COND(desired_velocity > 0.01, "test_time = " << test_time << " test vel = " << desired_velocity);
+  vcmd.data = desired_velocity;
   test_pub.publish(vcmd);
 }
 

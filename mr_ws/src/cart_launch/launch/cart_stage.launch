@@ -1,6 +1,7 @@
 <launch>
-```<arg name="world" default="$(find cart_launch)/stage_worlds/empty.world"/>
+   <arg name="world" default="$(find cart_launch)/stage_worlds/empty.world"/>
    <arg name="control_velocity" default="true"/>
+   <arg name="velocity_noise" default="0.0"/>
    <param name="/use_sim_time" value="true"/>
 
    <node pkg="stage_ros" type="stageros" name="model" args="$(arg world)">
@@ -21,8 +22,10 @@
       <param name="max_steering" value="0.5"/>
       <param name="max_steering_rate" value="1.0"/>
       <param name="max_velocity" value="18.0"/>
+      <param name="max_throttle" value="400"/>
+      <param name="max_throttle_rate" value="800"/>
       <param name="max_acc" value="2.0"/>
-      <param name="velocity_noise" value="0.0"/>
+      <param name="velocity_noise" value="$(arg velocity_noise)"/>
 
       <param name="mass" value="500.0"/>
       <param name="friction" value="20.0"/>
