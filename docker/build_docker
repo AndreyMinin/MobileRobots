@@ -1,1 +1,1 @@
-docker build -t gazebo_ros_$USER-image docker/dockerfile
+docker build -t gazebo_ros_$USER-image docker/dockerfile --network=host
